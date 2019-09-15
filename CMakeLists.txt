@@ -71,3 +71,22 @@ target_compile_definitions(${TARGET_NM} PRIVATE "GLFW_INCLUDE_NONE")
 target_include_directories(${TARGET_NM} PRIVATE "${GLAD_DIR}/include")
 target_link_libraries(${TARGET_NM} "glad" "${CMAKE_DL_LIBS}")
 
+# Hello Triangle Exercise Qn 1
+# Source files
+set(SOURCES "${SRC_DIR}/1.Getting_Started/2.3.Exercise_Qn1.cpp")
+set(TARGET_NM "2.3.Exercise_Qn1")
+
+# Executable definition and properties
+add_executable(${TARGET_NM} ${SOURCES})
+target_include_directories(${TARGET_NM} PRIVATE "${SRC_DIR}")
+set_property(TARGET ${TARGET_NM} PROPERTY CXX_STANDARD 11)
+
+# GLFW
+target_link_libraries(${TARGET_NM} "glfw" "${GLFW_LIBRARIES}")
+target_include_directories(${TARGET_NM} PRIVATE "${GLFW_DIR}/include")
+target_compile_definitions(${TARGET_NM} PRIVATE "GLFW_INCLUDE_NONE")
+
+# glad
+target_include_directories(${TARGET_NM} PRIVATE "${GLAD_DIR}/include")
+target_link_libraries(${TARGET_NM} "glad" "${CMAKE_DL_LIBS}")
+
