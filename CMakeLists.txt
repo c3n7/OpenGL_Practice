@@ -128,3 +128,61 @@ target_compile_definitions(${TARGET_NM} PRIVATE "GLFW_INCLUDE_NONE")
 target_include_directories(${TARGET_NM} PRIVATE "${GLAD_DIR}/include")
 target_link_libraries(${TARGET_NM} "glad" "${CMAKE_DL_LIBS}")
 
+
+# Red Triangle
+# Source files
+set(SOURCES "${SRC_DIR}/1.Getting_Started/3.0.Red_Triangle_Ex1.cpp")
+set(TARGET_NM "3.0.Red_Triangle_Ex1")
+
+# Executable definition and properties
+add_executable(${TARGET_NM} ${SOURCES})
+target_include_directories(${TARGET_NM} PRIVATE "${SRC_DIR}")
+set_property(TARGET ${TARGET_NM} PROPERTY CXX_STANDARD 11)
+
+# GLFW
+target_link_libraries(${TARGET_NM} "glfw" "${GLFW_LIBRARIES}")
+target_include_directories(${TARGET_NM} PRIVATE "${GLFW_DIR}/include")
+target_compile_definitions(${TARGET_NM} PRIVATE "GLFW_INCLUDE_NONE")
+
+# glad
+target_include_directories(${TARGET_NM} PRIVATE "${GLAD_DIR}/include")
+target_link_libraries(${TARGET_NM} "glad" "${CMAKE_DL_LIBS}")
+
+# Green to Black Triangle
+# Source files
+set(SOURCES "${SRC_DIR}/1.Getting_Started/3.1.Green_To_Black_Ex2.cpp")
+set(TARGET_NM "3.1.Green_To_Black_Ex2")
+
+# Executable definition and properties
+add_executable(${TARGET_NM} ${SOURCES})
+target_include_directories(${TARGET_NM} PRIVATE "${SRC_DIR}")
+set_property(TARGET ${TARGET_NM} PROPERTY CXX_STANDARD 11)
+
+# GLFW
+target_link_libraries(${TARGET_NM} "glfw" "${GLFW_LIBRARIES}")
+target_include_directories(${TARGET_NM} PRIVATE "${GLFW_DIR}/include")
+target_compile_definitions(${TARGET_NM} PRIVATE "GLFW_INCLUDE_NONE")
+
+# glad
+target_include_directories(${TARGET_NM} PRIVATE "${GLAD_DIR}/include")
+target_link_libraries(${TARGET_NM} "glad" "${CMAKE_DL_LIBS}")
+
+# Colorful Triangle
+# Source files
+set(SOURCES "${SRC_DIR}/1.Getting_Started/3.2.Colorful_Triangle_Ex3.cpp")
+set(TARGET_NM "3.2.Colorful_Triangle_Ex3")
+
+# Executable definition and properties
+add_executable(${TARGET_NM} ${SOURCES})
+target_include_directories(${TARGET_NM} PRIVATE "${SRC_DIR}")
+set_property(TARGET ${TARGET_NM} PROPERTY CXX_STANDARD 11)
+
+# GLFW
+target_link_libraries(${TARGET_NM} "glfw" "${GLFW_LIBRARIES}")
+target_include_directories(${TARGET_NM} PRIVATE "${GLFW_DIR}/include")
+target_compile_definitions(${TARGET_NM} PRIVATE "GLFW_INCLUDE_NONE")
+
+# glad
+target_include_directories(${TARGET_NM} PRIVATE "${GLAD_DIR}/include")
+target_link_libraries(${TARGET_NM} "glad" "${CMAKE_DL_LIBS}")
+
