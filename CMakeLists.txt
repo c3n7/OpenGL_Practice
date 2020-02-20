@@ -43,8 +43,8 @@ set(TARGET_NM "1.Hello_Window")
 buildFile(${SOURCES} ${TARGET_NM})
 
 # Hello Triangle
-set(SOURCES "${SRC_DIR}/1.Getting_Started/2.Hello_Triangle.cpp")
-set(TARGET_NM "2.Hello_Triangle")
+set(SOURCES "${SRC_DIR}/1.Getting_Started/2.1.Hello_Triangle.cpp")
+set(TARGET_NM "2.1.Hello_Triangle")
 buildFile(${SOURCES} ${TARGET_NM})
 
 # Hello Rectangle
