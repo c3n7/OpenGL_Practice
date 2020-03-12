@@ -1,5 +1,5 @@
 # Project definition 
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.9.2)
 project(OpenGL_Practice)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
