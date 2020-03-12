@@ -1,7 +1,8 @@
 dist: trusty
-sudo: false
+sudo: true
 language: cpp
-
+before_install:
+    - sudo apt-get -y install xorg-dev
 script:
     - cmake .
     - cmake --build .
