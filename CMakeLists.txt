@@ -7,7 +7,7 @@ set(SRC_DIR "${CMAKE_CURRENT_SOURCE_DIR}/source/")
 set(LIB_DIR "${CMAKE_CURRENT_SOURCE_DIR}/libraries")
 
 # GLFW
-set(GLFW_DIR "${LIB_DIR}/glfw-3.3")
+set(GLFW_DIR "${LIB_DIR}/glfw")
 set(GLFW_BUILD_EXAMPLES OFF CACHE INTERNAL "Build the GLFW example programs")
 set(GLFW_BUILD_TESTS OFF CACHE INTERNAL "Build the GLFW test programs")
 set(GLFW_BUILD_DOCS OFF CACHE INTERNAL "Build the GLFW documentation")
