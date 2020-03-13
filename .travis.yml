@@ -4,7 +4,7 @@ jobs:
           name: Ubuntu 18.04
           dist: bionic
         - os: osx
-          name: OSX
+          name: macOS
 
 language: cpp
 
