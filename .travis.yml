@@ -1,8 +1,10 @@
 jobs:
     include:
         - os: linux
+          name: Ubuntu 18.04
           dist: bionic
         - os: osx
+          name: OSX
 
 language: cpp
 
