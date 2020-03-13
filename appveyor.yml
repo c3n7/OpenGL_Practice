@@ -1,0 +1,7 @@
+os: Visual Studio 2017
+
+build_script:
+    - md build
+    - cd build
+    - cmake ..
+    - cmake --build .
