@@ -4,6 +4,5 @@ language: cpp
 before_install:
     - sudo apt-get -y install xorg-dev
 script:
-    - cmake --version
     - cmake .
     - cmake --build .
