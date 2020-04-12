@@ -43,28 +43,28 @@ set(TARGET_NM "1.Hello_Window")
 buildFile(${SOURCES} ${TARGET_NM})
 
 # Hello Triangle
-set(SOURCES "${SRC_DIR}/1.Getting_Started/2.1.Hello_Triangle.cpp")
-set(TARGET_NM "2.1.Hello_Triangle")
+set(SOURCES "${SRC_DIR}/1.Getting_Started/2.0.Hello_Triangle.cpp")
+set(TARGET_NM "2.0.Hello_Triangle")
 buildFile(${SOURCES} ${TARGET_NM})
 
 # Hello Rectangle
-set(SOURCES "${SRC_DIR}/1.Getting_Started/2.2.Hello_Rectangle.cpp")
-set(TARGET_NM "2.2.Hello_Rectangle")
+set(SOURCES "${SRC_DIR}/1.Getting_Started/2.1.Hello_Rectangle.cpp")
+set(TARGET_NM "2.1.Hello_Rectangle")
 buildFile(${SOURCES} ${TARGET_NM})
 
 # Hello Triangle Exercise Qn 1
-set(SOURCES "${SRC_DIR}/1.Getting_Started/2.3.Exercise_Qn1.cpp")
-set(TARGET_NM "2.3.Exercise_Qn1")
+set(SOURCES "${SRC_DIR}/1.Getting_Started/2.2.Exercise_Qn1.cpp")
+set(TARGET_NM "2.2.Exercise_Qn1")
 buildFile(${SOURCES} ${TARGET_NM})
 
 # Hello Triangle Exercise Qn 2
-set(SOURCES "${SRC_DIR}/1.Getting_Started/2.4.Exercise_Qn2.cpp")
-set(TARGET_NM "2.4.Exercise_Qn2")
+set(SOURCES "${SRC_DIR}/1.Getting_Started/2.3.Exercise_Qn2.cpp")
+set(TARGET_NM "2.3.Exercise_Qn2")
 buildFile(${SOURCES} ${TARGET_NM})
 
 # Hello Triangle Exercise Qn 3
-set(SOURCES "${SRC_DIR}/1.Getting_Started/2.5.Exercise_Qn3.cpp")
-set(TARGET_NM "2.5.Exercise_Qn3")
+set(SOURCES "${SRC_DIR}/1.Getting_Started/2.4.Exercise_Qn3.cpp")
+set(TARGET_NM "2.4.Exercise_Qn3")
 buildFile(${SOURCES} ${TARGET_NM})
 
 
