@@ -21,29 +21,29 @@ int main() {
 
     GLFWwindow *window = glfwCreateWindow(800, 600, "Hello Window", NULL, NULL);
     if (window == NULL) {
-        std::cout << "Failed to create a GLFW window" << std::endl;
+        std::cerr << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
         return -1;
     }
     glfwMakeContextCurrent(window);
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-        std::cout << "Failed to initialize GLAD" << std::endl;
+        std::cerr << "Failed to initialize GLAD" << std::endl;
         return -1;
     }
+    glViewport(0, 0, 800, 600);
 
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-    glViewport(0, 0, 800, 600);
-
     while (!glfwWindowShouldClose(window)) {
+        // Input
         processInput(window);
-
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClearColor(0.102f, 0.110f, 0.118f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glfwPollEvents();
+        // Check and call events and swap the buffer
         glfwSwapBuffers(window);
+        glfwPollEvents();
     }
 
     glfwTerminate();
