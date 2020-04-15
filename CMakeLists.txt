@@ -142,3 +142,12 @@ set(STAGE_NM "1.Getting_Started")
 set(V_PATH "${SRC_DIR}1.Getting_Started/3.4.vertex.glsl")
 set(F_PATH "${SRC_DIR}1.Getting_Started/3.4.fragment.glsl")
 buildFileWithShader(${SOURCES} ${TARGET_NM} ${STAGE_NM} ${V_PATH} ${F_PATH})
+
+# Shaders Exercise_Qn3
+# Source files
+set(SOURCES "${SRC_DIR}/1.Getting_Started/3.5.Exercise_Qn3.cpp")
+set(TARGET_NM "3.5.Exercise_Qn3")
+set(STAGE_NM "1.Getting_Started")
+set(V_PATH "${SRC_DIR}1.Getting_Started/3.5.vertex.glsl")
+set(F_PATH "${SRC_DIR}1.Getting_Started/3.5.fragment.glsl")
+buildFileWithShader(${SOURCES} ${TARGET_NM} ${STAGE_NM} ${V_PATH} ${F_PATH})
