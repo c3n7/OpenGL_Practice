@@ -84,3 +84,52 @@ buildFile(${SOURCES} ${TARGET_NM})
 set(SOURCES "${SRC_DIR}/1.Getting_Started/3.2.Colorful_Triangle_Ex3.cpp")
 set(TARGET_NM "3.2.Colorful_Triangle_Ex3")
 buildFile(${SOURCES} ${TARGET_NM})
+
+
+
+# shader
+set(SHADER_DIR "${LIB_DIR}/shader")
+add_library("shader" "${SHADER_DIR}/shader.cpp")
+target_include_directories("shader" PRIVATE "${SHADER_DIR}" "${GLAD_DIR}/include")
+
+function(buildFileWithShader)
+    list(GET ARGV 0 SRCS)
+    list(GET ARGV 1 PROJ_NAME)
+    list(GET ARGV 2 STAGE_NM)
+    list(GET ARGV 3 V_PATH)
+    list(GET ARGV 4 F_PATH)
+
+    set (VERTEX_PATH "\"${V_PATH}\"")
+    set (FRAGMENT_PATH "\"${F_PATH}\"")
+
+    configure_file (
+        "${SRCS}.in"
+        "${CMAKE_CURRENT_BINARY_DIR}/src/${STAGE_NM}/${PROJ_NAME}.cpp" @ONLY
+    )
+
+    set(SRCS "${CMAKE_CURRENT_BINARY_DIR}/src/${STAGE_NM}/${PROJ_NAME}.cpp")
+
+    # Executable definition and properties
+    add_executable(${PROJ_NAME} ${SRCS})
+    target_include_directories(${PROJ_NAME} PRIVATE "${SRC_DIR}")
+    set_property(TARGET ${PROJ_NAME} PROPERTY CXX_STANDARD 11)
+
+    target_link_libraries(${PROJ_NAME} "glfw" "${GLFW_LIBRARIES}")
+    target_include_directories(${PROJ_NAME} PRIVATE "${GLFW_DIR}/include")
+    target_compile_definitions(${PROJ_NAME} PRIVATE "GLFW_INCLUDE_NONE")
+
+    target_include_directories(${PROJ_NAME} PRIVATE "${GLAD_DIR}/include")
+    target_link_libraries(${PROJ_NAME} "glad" "${CMAKE_DL_LIBS}")
+
+    target_include_directories(${PROJ_NAME} PRIVATE "${SHADER_DIR}")
+    target_link_libraries(${PROJ_NAME} "shader")
+endFunction()
+
+# Shaders Exercise_Qn1
+# Source files
+set(SOURCES "${SRC_DIR}/1.Getting_Started/3.3.Exercise_Qn1.cpp")
+set(TARGET_NM "3.3.Exercise_Qn1")
+set(STAGE_NM "1.Getting_Started")
+set(V_PATH "${SRC_DIR}1.Getting_Started/3.3.vertex.glsl")
+set(F_PATH "${SRC_DIR}1.Getting_Started/3.3.fragment.glsl")
+buildFileWithShader(${SOURCES} ${TARGET_NM} ${STAGE_NM} ${V_PATH} ${F_PATH})
