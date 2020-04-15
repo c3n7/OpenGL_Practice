@@ -1,11 +1,11 @@
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
-#include <iostream>
 #include <shader.h>
+
+#include <iostream>
 
 #define VERTEX_PATH @VERTEX_PATH@
 #define FRAGMENT_PATH @FRAGMENT_PATH@
-
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
@@ -18,22 +18,6 @@ void processInput(GLFWwindow* window) {
 }
 
 float vertices[] = {-0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.0f, 0.5f, 0.0f};
-
-const char* vertexShaderSource =
-        "#version 330 core\n"
-        "layout (location = 0) in vec3 aPos;\n"
-        "void main()\n"
-        "{\n"
-        "    gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-        "}\0";
-
-
-const char* fragmentShaderSource =
-        "#version 330 core\n"
-        "out vec4 FragColor;\n"
-        "void main() {\n"
-        "    FragColor = vec4(0.839f, 0.098f, 0.227f, 1.0f);\n"
-        "}\0";
 
 int main() {
     glfwInit();
