@@ -2,11 +2,11 @@
 #define SHADER_H
 
 #include <glad/glad.h>
-#include <string>
 
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <string>
 
 class Shader {
   public:

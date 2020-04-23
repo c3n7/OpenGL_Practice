@@ -1,10 +1,10 @@
 #include <GLFW/glfw3.h>
-#include <glad/glad.h>
-#include <iostream>
-
-#include <shader.h>
 #include <find_resource.h>
+#include <glad/glad.h>
+#include <shader.h>
 #include <stb_image.h>
+
+#include <iostream>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
@@ -16,13 +16,12 @@ void processInput(GLFWwindow* window) {
     }
 }
 
-
 float vertices[] = {
-    // positions         // colors          // texture coords
-    0.5f, 0.5f, 0.0f,   1.0f, 0.0f, 0.0f,  1.0f, 1.0f, // top right
-    0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,  1.0f, 0.0f, // bottom right
-    -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f,  0.0f, 0.0f, // bottom left
-    -0.5f, 0.5f, 0.0f,  1.0f, 1.0f, 0.0f,  0.0f, 1.0f, // top left
+        // positions               // colors            // texture coords
+        0.5f, 0.5f, 0.0f,       1.0f, 0.0f, 0.0f,    1.0f, 1.0f, // top right
+        0.5f, -0.5f, 0.0f,      0.0f, 1.0f, 0.0f,    1.0f, 0.0f, // bottom right
+        -0.5f, -0.5f, 0.0f,     0.0f, 0.0f, 1.0f,    0.0f, 0.0f, // bottom left
+        -0.5f, 0.5f, 0.0f,      1.0f, 1.0f, 0.0f,    0.0f, 1.0f, // top left
 };
 
 unsigned int indices[] = {0, 1, 3, 1, 2, 3};
@@ -70,16 +69,23 @@ int main() {
     glEnableVertexAttribArray(0);
 
     // Set the colors VAO
-    glVertexAttribPointer(
-            1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1,
+            3,
+            GL_FLOAT,
+            GL_FALSE,
+            8 * sizeof(float),
+            (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
-    
+
     // Set the textures VAO
-    glVertexAttribPointer(
-            2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+    glVertexAttribPointer(2,
+            2,
+            GL_FLOAT,
+            GL_FALSE,
+            8 * sizeof(float),
+            (void*)(6 * sizeof(float)));
     glEnableVertexAttribArray(2);
     glBindVertexArray(0);
-
 
     unsigned int textures[2];
     glActiveTexture(GL_TEXTURE0);
@@ -95,9 +101,20 @@ int main() {
     Resources resources;
     unsigned char* data = stbi_load(
             resources.getResourcePath("/textures/container.jpg").c_str(),
-            &width, &height, &nrChannels, 0);
+            &width,
+            &height,
+            &nrChannels,
+            0);
     if (data) {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        glTexImage2D(GL_TEXTURE_2D,
+                0,
+                GL_RGB,
+                width,
+                height,
+                0,
+                GL_RGB,
+                GL_UNSIGNED_BYTE,
+                data);
     } else {
         std::cout << "Failed to load texture" << std::endl;
     }
@@ -112,16 +129,29 @@ int main() {
     // Load and generate the texture
     data = stbi_load(
             resources.getResourcePath("/textures/awesomeface.png").c_str(),
-            &width, &height, &nrChannels, 0);
+            &width,
+            &height,
+            &nrChannels,
+            0);
     if (data) {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+        glTexImage2D(GL_TEXTURE_2D,
+                0,
+                GL_RGBA,
+                width,
+                height,
+                0,
+                GL_RGBA,
+                GL_UNSIGNED_BYTE,
+                data);
     } else {
         std::cout << "Failed to load texture 2" << std::endl;
     }
     stbi_image_free(data);
 
-    std::string vertex = resources.getShaderPath("/1.Getting_Started/4.Textures/2.vertex.glsl");
-    std::string fragment = resources.getShaderPath("/1.Getting_Started/4.Textures/2.fragment.glsl");
+    std::string vertex = resources.getShaderPath(
+            "/1.Getting_Started/4.Textures/2.vertex.glsl");
+    std::string fragment = resources.getShaderPath(
+            "/1.Getting_Started/4.Textures/2.fragment.glsl");
     Shader ourShader(vertex.c_str(), fragment.c_str());
     ourShader.use();
     glUniform1i(glGetUniformLocation(ourShader.programID, "ourTexture1"), 0);

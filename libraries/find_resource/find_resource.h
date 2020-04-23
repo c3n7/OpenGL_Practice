@@ -8,7 +8,7 @@
 
 class Resources {
   public:
-      std::string getResourcePath(std::string resource);
-      std::string getShaderPath(std::string shader);
+    std::string getResourcePath(std::string resource);
+    std::string getShaderPath(std::string shader);
 };
 #endif
