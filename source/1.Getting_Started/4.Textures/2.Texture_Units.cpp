@@ -1,13 +1,10 @@
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
-#include <shader.h>
-#include <stb_image.h>
-
 #include <iostream>
 
-#define VERTEX_PATH @VERTEX_PATH@
-#define FRAGMENT_PATH @FRAGMENT_PATH@
-#define IMAGE_PATH @IMAGE_PATH@
+#include <shader.h>
+#include <find_resource.h>
+#include <stb_image.h>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
@@ -83,24 +80,52 @@ int main() {
     glEnableVertexAttribArray(2);
     glBindVertexArray(0);
 
-    Shader ourShader(VERTEX_PATH, FRAGMENT_PATH);
 
-    unsigned int texture;
-    glGenTextures(1, &texture);
-    glBindTexture(GL_TEXTURE_2D, texture);
+    unsigned int textures[2];
+    glActiveTexture(GL_TEXTURE0);
+    glGenTextures(2, textures);
+    glBindTexture(GL_TEXTURE_2D, textures[0]);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     // Load and generate the texture
     int width, height, nrChannels;
-    unsigned char* data = stbi_load(IMAGE_PATH, &width, &height, &nrChannels, 0);
+    stbi_set_flip_vertically_on_load(true);
+    Resources resources;
+    unsigned char* data = stbi_load(
+            resources.getResourcePath("/textures/container.jpg").c_str(),
+            &width, &height, &nrChannels, 0);
     if (data) {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
     } else {
         std::cout << "Failed to load texture" << std::endl;
     }
     stbi_image_free(data);
+
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, textures[1]);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    // Load and generate the texture
+    data = stbi_load(
+            resources.getResourcePath("/textures/awesomeface.png").c_str(),
+            &width, &height, &nrChannels, 0);
+    if (data) {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+    } else {
+        std::cout << "Failed to load texture 2" << std::endl;
+    }
+    stbi_image_free(data);
+
+    std::string vertex = resources.getShaderPath("/1.Getting_Started/4.Textures/2.vertex.glsl");
+    std::string fragment = resources.getShaderPath("/1.Getting_Started/4.Textures/2.fragment.glsl");
+    Shader ourShader(vertex.c_str(), fragment.c_str());
+    ourShader.use();
+    glUniform1i(glGetUniformLocation(ourShader.programID, "ourTexture1"), 0);
+    ourShader.setInt("ourTexture2", 1);
 
     while (!glfwWindowShouldClose(window)) {
         // Input
@@ -111,7 +136,11 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT);
 
         ourShader.use();
-        glBindTexture(GL_TEXTURE_2D, texture);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, textures[0]);
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, textures[1]);
+
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
@@ -125,7 +154,7 @@ int main() {
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
     glDeleteBuffers(1, &EBO);
-    glDeleteTextures(1, &texture);
+    glDeleteTextures(1, textures);
 
     glfwTerminate();
     return 0;

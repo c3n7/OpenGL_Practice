@@ -160,65 +160,63 @@ set(STB_DIR "${LIB_DIR}/stb_image")
 add_library("stb_image" "${STB_DIR}/stb_image.cpp")
 target_include_directories("stb_image" PRIVATE "${STB_DIR}")
 
+# find_resource
+set(FR_DIR "${LIB_DIR}/find_resource")
+set(RESOURCES_PATH "${CMAKE_CURRENT_SOURCE_DIR}/resources")
+set(PROJECT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/source")
+configure_file (
+    "${FR_DIR}/find_resource.h"
+    "${CMAKE_CURRENT_BINARY_DIR}/libraries/find_resource/find_resource.h" @ONLY
+)
+configure_file (
+    "${FR_DIR}/find_resource.cpp"
+    "${CMAKE_CURRENT_BINARY_DIR}/libraries/find_resource/find_resource.cpp" @ONLY
+)
+
+set(FR_DIR "${CMAKE_CURRENT_BINARY_DIR}/libraries/find_resource")
+add_library("find_resource" "${FR_DIR}/find_resource.cpp")
+target_include_directories("find_resource" PRIVATE "${LIB_DIR}")
+
 
 # ======================================================================================
 
 function(buildFileWithTexture)
     list(GET ARGV 0 SRCS)
-    list(GET ARGV 1 PROJ_NAME)
-    list(GET ARGV 2 STAGE_NM)
-    list(GET ARGV 3 V_PATH)
-    list(GET ARGV 4 F_PATH)
+    list(GET ARGV 1 TARGET_NM)
 
-    set(SRCS "${CMAKE_CURRENT_BINARY_DIR}/src/${STAGE_NM}/${PROJ_NAME}.cpp")
+    # set(SRCS "${CMAKE_CURRENT_BINARY_DIR}/src/${STAGE_NM}/${PROJ_NAME}.cpp")
 
     # Executable definition and properties
-    add_executable(${PROJ_NAME} ${SRCS})
-    target_include_directories(${PROJ_NAME} PRIVATE "${SRC_DIR}")
-    set_property(TARGET ${PROJ_NAME} PROPERTY CXX_STANDARD 11)
+    add_executable(${TARGET_NM} ${SRCS})
+    target_include_directories(${TARGET_NM} PRIVATE "${SRC_DIR}")
+    set_property(TARGET ${TARGET_NM} PROPERTY CXX_STANDARD 11)
 
-    target_link_libraries(${PROJ_NAME} "glfw" "${GLFW_LIBRARIES}")
-    target_include_directories(${PROJ_NAME} PRIVATE "${GLFW_DIR}/include")
-    target_compile_definitions(${PROJ_NAME} PRIVATE "GLFW_INCLUDE_NONE")
+    target_link_libraries(${TARGET_NM} "glfw" "${GLFW_LIBRARIES}")
+    target_include_directories(${TARGET_NM} PRIVATE "${GLFW_DIR}/include")
+    target_compile_definitions(${TARGET_NM} PRIVATE "GLFW_INCLUDE_NONE")
 
-    target_include_directories(${PROJ_NAME} PRIVATE "${GLAD_DIR}/include")
-    target_link_libraries(${PROJ_NAME} "glad" "${CMAKE_DL_LIBS}")
+    target_include_directories(${TARGET_NM} PRIVATE "${GLAD_DIR}/include")
+    target_link_libraries(${TARGET_NM} "glad" "${CMAKE_DL_LIBS}")
 
-    target_include_directories(${PROJ_NAME} PRIVATE "${SHADER_DIR}")
-    target_link_libraries(${PROJ_NAME} "shader")
+    target_include_directories(${TARGET_NM} PRIVATE "${SHADER_DIR}")
+    target_link_libraries(${TARGET_NM} "shader")
 
-    target_include_directories(${PROJ_NAME} PRIVATE "${STB_DIR}")
-    target_link_libraries(${PROJ_NAME} "stb_image")
+    target_include_directories(${TARGET_NM} PRIVATE "${STB_DIR}")
+    target_link_libraries(${TARGET_NM} "stb_image")
+
+    target_include_directories(${TARGET_NM} PRIVATE "${FR_DIR}")
+    target_link_libraries(${TARGET_NM} "find_resource")
 endFunction()
 
 # 4. TEXTURES
 # Textured Colorful Rectangle
 # Source files
-set(SOURCES "${SRC_DIR}/1.Getting_Started/4.0.Textures/1.Textures.cpp")
+set(SOURCES "${SRC_DIR}/1.Getting_Started/4.Textures/1.Textures.cpp")
 set(TARGET_NM "4.1.Textures")
-set(STAGE_NM "1.Getting_Started/4.0.Textures/")
-set(VERTEX_PATH "\"${SRC_DIR}1.Getting_Started/4.0.Textures/1.vertex.glsl\"")
-set(FRAGMENT_PATH "\"${SRC_DIR}1.Getting_Started/4.0.Textures/1.fragment.glsl\"")
-set(IMAGE_PATH "\"${CMAKE_CURRENT_SOURCE_DIR}/resources/textures/container.jpg\"")
-configure_file (
-    ${SOURCES}
-    "${CMAKE_CURRENT_BINARY_DIR}/src/${STAGE_NM}/${TARGET_NM}.cpp" @ONLY
-)
-buildFileWithTexture(${SOURCES} ${TARGET_NM} ${STAGE_NM} ${V_PATH} ${F_PATH})
+buildFileWithTexture(${SOURCES} ${TARGET_NM})
 
 # Texture Units
 # Source files
-set(SOURCES "${SRC_DIR}/1.Getting_Started/4.0.Textures/2.Texture_Units.cpp")
+set(SOURCES "${SRC_DIR}/1.Getting_Started/4.Textures/2.Texture_Units.cpp")
 set(TARGET_NM "4.2.Texture_Units")
-set(STAGE_NM "1.Getting_Started/4.0.Textures/")
-set(VERTEX_PATH "${SRC_DIR}1.Getting_Started/4.0.Textures/2.vertex.glsl")
-set(FRAGMENT_PATH "${SRC_DIR}1.Getting_Started/4.0.Textures/2.fragment.glsl")
-set(CONTAINER "${CMAKE_CURRENT_SOURCE_DIR}/resources/textures/container.jpg")
-set(SMILEY "${CMAKE_CURRENT_SOURCE_DIR}/resources/textures/awesomeface.png")
-
-configure_file (
-    ${SOURCES}
-    "${CMAKE_CURRENT_BINARY_DIR}/src/${STAGE_NM}/${TARGET_NM}.cpp" @ONLY
-)
-
-buildFileWithTexture(${SOURCES} ${TARGET_NM} ${STAGE_NM} ${V_PATH} ${F_PATH})
+buildFileWithTexture(${SOURCES} ${TARGET_NM})
