@@ -1,5 +1,6 @@
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
+
 #include <iostream>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
@@ -12,45 +13,23 @@ void processInput(GLFWwindow* window) {
     }
 }
 
-float vertices[] = {
-        // positions         colors
-        -0.5f,
-        -0.5f,
-        0.0f,
-        1.0f,
-        0.0f,
-        0.0f, // bottom right
-        0.5f,
-        -0.5f,
-        0.0f,
-        0.0f,
-        1.0f,
-        0.0f, // bottom left
-        0.0f,
-        0.5f,
-        0.0f,
-        0.0f,
-        0.0f,
-        1.0f // top
-};
+float vertices[] = {-0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.0f, 0.5f, 0.0f};
 
 const char* vertexShaderSource =
         "#version 330 core\n"
         "layout (location = 0) in vec3 aPos;\n"
-        "layout (location = 1) in vec3 aColor;\n"
-        "out vec3 ourColor;\n"
-        "void main()\n"
-        "{\n"
-        "    gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-        "    ourColor = aColor;\n"
+        "out vec4 vertexColor;\n"
+        "void main() {\n"
+        "    gl_Position=vec4(aPos, 1.0);\n"
+        "    vertexColor = vec4(0.5, 0.0, 0.0, 1.0);\n"
         "}\0";
 
 const char* fragmentShaderSource =
         "#version 330 core\n"
-        "in vec3 ourColor;\n"
+        "in vec4 vertexColor;\n"
         "out vec4 FragColor;\n"
         "void main() {\n"
-        "    FragColor = vec4(ourColor, 1.0f);\n"
+        "    FragColor = vertexColor;\n"
         "}\0";
 
 int main() {
@@ -60,8 +39,7 @@ int main() {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     // glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
-    GLFWwindow* window =
-            glfwCreateWindow(800, 600, "Hello Triangle", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(800, 600, "Red Triangle", NULL, NULL);
     if (window == NULL) {
         std::cerr << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
@@ -77,26 +55,23 @@ int main() {
 
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
+    int nrAttributes;
+    glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &nrAttributes);
+    std::cout << "Maximum nr of vertex attributes supported: " << nrAttributes
+              << std::endl;
+
     unsigned int VAO, VBO;
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
-    // Bind VAO
+    // bind VAO
     glBindVertexArray(VAO);
-    // Copy our vertices array to a buffer
+    // copy our vertices
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    // position attribute
+    // set the VAO
     glVertexAttribPointer(
-            0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+            0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
-    // color attribute
-    glVertexAttribPointer(1,
-            3,
-            GL_FLOAT,
-            GL_FALSE,
-            6 * sizeof(float),
-            (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
     glBindVertexArray(0);
 
     // The vertex shader
@@ -113,7 +88,7 @@ int main() {
                   << std::endl;
     }
 
-    // Fragment shader
+    // Fragment Shader
     unsigned int fragmentShader;
     fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
@@ -125,7 +100,7 @@ int main() {
                   << infoLog << std::endl;
     }
 
-    // Shader program
+    // Shaders program
     unsigned int shaderProgram;
     shaderProgram = glCreateProgram();
     glAttachShader(shaderProgram, vertexShader);
@@ -134,15 +109,15 @@ int main() {
     glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
     if (!success) {
         glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-        std::cerr << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n\t" << infoLog
-                  << std::endl;
+        std::cerr << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n\t"
+                  << infoLog << std::endl;
     }
 
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
 
     while (!glfwWindowShouldClose(window)) {
-        // Input
+        // input
         processInput(window);
 
         // Draw

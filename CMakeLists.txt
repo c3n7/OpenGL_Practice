@@ -67,22 +67,24 @@ set(SOURCES "${SRC_DIR}/1.Getting_Started/2.4.Exercise_Qn3.cpp")
 set(TARGET_NM "2.4.Exercise_Qn3")
 buildFile(${SOURCES} ${TARGET_NM})
 
-
+# =============================================================================
+#                                 Shaders
+# =============================================================================
 # Red Triangle
-set(SOURCES "${SRC_DIR}/1.Getting_Started/3.0.Red_Triangle_Ex1.cpp")
-set(TARGET_NM "3.0.Red_Triangle_Ex1")
+set(SOURCES "${SRC_DIR}/1.Getting_Started/3.Shaders/1.Red_Triangle_Ex1.cpp")
+set(TARGET_NM "3.1.Red_Triangle_Ex1")
 buildFile(${SOURCES} ${TARGET_NM})
 
 # Green to Black Triangle
 # Source files
-set(SOURCES "${SRC_DIR}/1.Getting_Started/3.1.Green_To_Black_Ex2.cpp")
-set(TARGET_NM "3.1.Green_To_Black_Ex2")
+set(SOURCES "${SRC_DIR}/1.Getting_Started/3.Shaders/2.Green_To_Black_Ex2.cpp")
+set(TARGET_NM "3.2.Green_To_Black_Ex2")
 buildFile(${SOURCES} ${TARGET_NM})
 
 # Colorful Triangle
 # Source files
-set(SOURCES "${SRC_DIR}/1.Getting_Started/3.2.Colorful_Triangle_Ex3.cpp")
-set(TARGET_NM "3.2.Colorful_Triangle_Ex3")
+set(SOURCES "${SRC_DIR}/1.Getting_Started/3.Shaders/3.Colorful_Triangle_Ex3.cpp")
+set(TARGET_NM "3.3.Colorful_Triangle_Ex3")
 buildFile(${SOURCES} ${TARGET_NM})
 
 
@@ -127,29 +129,29 @@ endFunction()
 
 # Shaders Exercise_Qn1
 # Source files
-set(SOURCES "${SRC_DIR}/1.Getting_Started/3.3.Exercise_Qn1.cpp")
-set(TARGET_NM "3.3.Exercise_Qn1")
-set(STAGE_NM "1.Getting_Started")
-set(V_PATH "${SRC_DIR}1.Getting_Started/3.3.vertex.glsl")
-set(F_PATH "${SRC_DIR}1.Getting_Started/3.3.fragment.glsl")
+set(SOURCES "${SRC_DIR}/1.Getting_Started/3.Shaders/4.Exercise_Qn1.cpp")
+set(TARGET_NM "3.4.Exercise_Qn1")
+set(STAGE_NM "1.Getting_Started/3.Shaders/")
+set(V_PATH "${SRC_DIR}1.Getting_Started/3.Shaders/4.vertex.glsl")
+set(F_PATH "${SRC_DIR}1.Getting_Started/3.Shaders/4.fragment.glsl")
 buildFileWithShader(${SOURCES} ${TARGET_NM} ${STAGE_NM} ${V_PATH} ${F_PATH})
 
 # Shaders Exercise_Qn2
 # Source files
-set(SOURCES "${SRC_DIR}/1.Getting_Started/3.4.Exercise_Qn2.cpp")
-set(TARGET_NM "3.4.Exercise_Qn2")
-set(STAGE_NM "1.Getting_Started")
-set(V_PATH "${SRC_DIR}1.Getting_Started/3.4.vertex.glsl")
-set(F_PATH "${SRC_DIR}1.Getting_Started/3.4.fragment.glsl")
+set(SOURCES "${SRC_DIR}/1.Getting_Started/3.Shaders/5.Exercise_Qn2.cpp")
+set(TARGET_NM "3.5.Exercise_Qn2")
+set(STAGE_NM "1.Getting_Started/3.Shaders/")
+set(V_PATH "${SRC_DIR}1.Getting_Started/3.Shaders/5.vertex.glsl")
+set(F_PATH "${SRC_DIR}1.Getting_Started/3.Shaders/5.fragment.glsl")
 buildFileWithShader(${SOURCES} ${TARGET_NM} ${STAGE_NM} ${V_PATH} ${F_PATH})
 
 # Shaders Exercise_Qn3
 # Source files
-set(SOURCES "${SRC_DIR}/1.Getting_Started/3.5.Exercise_Qn3.cpp")
-set(TARGET_NM "3.5.Exercise_Qn3")
-set(STAGE_NM "1.Getting_Started")
-set(V_PATH "${SRC_DIR}1.Getting_Started/3.5.vertex.glsl")
-set(F_PATH "${SRC_DIR}1.Getting_Started/3.5.fragment.glsl")
+set(SOURCES "${SRC_DIR}/1.Getting_Started/3.Shaders/6.Exercise_Qn3.cpp")
+set(TARGET_NM "3.6.Exercise_Qn3")
+set(STAGE_NM "1.Getting_Started/3.Shaders/")
+set(V_PATH "${SRC_DIR}1.Getting_Started/3.Shaders/6.vertex.glsl")
+set(F_PATH "${SRC_DIR}1.Getting_Started/3.Shaders/6.fragment.glsl")
 buildFileWithShader(${SOURCES} ${TARGET_NM} ${STAGE_NM} ${V_PATH} ${F_PATH})
 
 
