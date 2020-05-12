@@ -220,3 +220,49 @@ buildFileWithTexture(${SOURCES} ${TARGET_NM})
 set(SOURCES "${SRC_DIR}/1.Getting_Started/4.Textures/2.Texture_Units.cpp")
 set(TARGET_NM "4.2.Texture_Units")
 buildFileWithTexture(${SOURCES} ${TARGET_NM})
+
+
+# ================================================================================
+#                                        GLM
+# ================================================================================
+
+set(GLM_INCLUDE_DIR "${LIB_DIR}/glm/glm/")
+
+function(buildFileWithGLM)
+    list(GET ARGV 0 SRCS)
+    list(GET ARGV 1 TARGET_NM)
+
+    # set(SRCS "${CMAKE_CURRENT_BINARY_DIR}/src/${STAGE_NM}/${PROJ_NAME}.cpp")
+
+    # Executable definition and properties
+    add_executable(${TARGET_NM} ${SRCS})
+    target_include_directories(${TARGET_NM} PRIVATE "${SRC_DIR}")
+    set_property(TARGET ${TARGET_NM} PROPERTY CXX_STANDARD 11)
+ 
+
+    target_link_libraries(${TARGET_NM} "glfw" "${GLFW_LIBRARIES}")
+    target_include_directories(${TARGET_NM} PRIVATE "${GLFW_DIR}/include")
+    target_compile_definitions(${TARGET_NM} PRIVATE "GLFW_INCLUDE_NONE")
+
+    target_include_directories(${TARGET_NM} PRIVATE "${GLAD_DIR}/include")
+    target_link_libraries(${TARGET_NM} "glad" "${CMAKE_DL_LIBS}")
+
+    target_include_directories(${TARGET_NM} PRIVATE "${SHADER_DIR}")
+    target_link_libraries(${TARGET_NM} "shader")
+
+    target_include_directories(${TARGET_NM} PRIVATE "${STB_DIR}")
+    target_link_libraries(${TARGET_NM} "stb_image")
+
+    target_include_directories(${TARGET_NM} PRIVATE "${FR_DIR}")
+    target_link_libraries(${TARGET_NM} "find_resource")
+
+    # glm
+    target_include_directories(${TARGET_NM} PRIVATE ${GLM_INCLUDE_DIR})
+endFunction()
+
+
+# 5.TRANSFORMATIONS
+# Transformed container
+set(SOURCES "${SRC_DIR}/1.Getting_Started/5.Transformations/1.Transformations.cpp")
+set(TARGET_NM "5.1.Transformations")
+buildFileWithGLM(${SOURCES} ${TARGET_NM})
