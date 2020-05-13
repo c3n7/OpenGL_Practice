@@ -10,5 +10,5 @@ vec4 texColor;
 
 void main() {
     texColor = texture2D(ourTexture, TexCoord);
-    FragColor = vec4(texColor.rrr, 1);
+    FragColor = vec4(texColor.rgb, 1);
 }

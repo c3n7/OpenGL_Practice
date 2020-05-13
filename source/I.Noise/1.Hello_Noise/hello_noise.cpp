@@ -98,25 +98,58 @@ int main() {
     Shader ourShader(vertex.c_str(), fragment.c_str());
 
     FastNoise myNoise; // Create a FastNoise object
-    myNoise.SetNoiseType(FastNoise::WhiteNoise); // Set the desired noise type
+    myNoise.SetNoiseType(FastNoise::Cellular); // Set the desired noise type
+    myNoise.SetFrequency(0.14);
+    myNoise.SetCellularDistanceFunction(FastNoise::Natural);
+    myNoise.SetSeed(1337);
 
-    float heightMap[256][256]; // 2D heightmap to create terrain
+    float heightMap[1024][1024]; // 2D heightmap to create terrain
     int mapWidth = sizeof(heightMap[0])/sizeof(float);
     std::cout << mapWidth <<std::endl;
 
+    unsigned char texData[mapWidth * mapWidth * 3];
+
     for (int x = 0; x < mapWidth; x++)
     {
+        // std::cout << std::endl;
         for (int y = 0; y < mapWidth; y++)
         {
             heightMap[x][y] = myNoise.GetNoise(x,y);
+            // One dimension index
+            int index = ((x) * mapWidth) + y;
+            // y = 3x;
+            int colorIndex =  (3 * index);
+            texData[colorIndex] = (int)(255 * heightMap[x][y]);
+            texData[colorIndex + 1] = (int)(255 * heightMap[x][y]);
+            texData[colorIndex + 2] = (int)(255 * heightMap[x][y]);
+
+            // std::cout << ((x) * mapWidth) + y << "{"
+                        // << (int)texData[colorIndex] << ", "
+                        // << (int)texData[colorIndex + 1] << ", "
+                        // << (int)texData[colorIndex + 2] << "} ";
         }
     }
+
+    float max = 0.0f;
+
+    for (int x = 0; x < mapWidth; x++){
+        for (int y = 0; y < mapWidth; y++) {
+            if(heightMap[x][y] > max) {
+                max = heightMap[x][y];
+            }
+        }
+    }
+
+    std::cout << "\nMax: " << max << std::endl;
 
     unsigned int texture;
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+    float color[] = {1, 1, 1, 1};
+    glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, color);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     // Load and generate the texture
@@ -127,6 +160,8 @@ int main() {
             &height,
             &nrChannels,
             0);
+    std::cout << (int)texData[0] << " " << (int)texData[1] << " " << (int)texData[2] << std::endl;
+    std::cout << (int)texData[765] << " " << (int)texData[766] << " " << (int)texData[767] << std::endl;
     if (data) {
         glTexImage2D(GL_TEXTURE_2D,
                 0,
@@ -136,7 +171,7 @@ int main() {
                 0,
                 GL_RGB,
                 GL_UNSIGNED_BYTE,
-                heightMap);
+                texData);
     } else {
         std::cout << "Failed to load texture" << std::endl;
     }

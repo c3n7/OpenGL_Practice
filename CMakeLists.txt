@@ -271,3 +271,65 @@ buildFileWithGLM(${SOURCES} ${TARGET_NM})
 set(SOURCES "${SRC_DIR}/1.Getting_Started/5.Transformations/2.Rotation.cpp")
 set(TARGET_NM "5.2.RotatedRect")
 buildFileWithGLM(${SOURCES} ${TARGET_NM})
+
+# 6. COORDINATE SYSTEMS
+# Coordinate Hello
+set(SOURCES "${SRC_DIR}/1.Getting_Started/6.Coordinate_Systems/1.Hello_Coordinates.cpp")
+set(TARGET_NM "6.1.Hello_Coordinates")
+buildFileWithGLM(${SOURCES} ${TARGET_NM})
+
+# _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
+# ========================================================================================
+#                                    NOISE
+# _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
+# ========================================================================================
+
+set(GLM_INCLUDE_DIR "${LIB_DIR}/glm/glm/")
+
+set(FASTNOISE_DIR "${LIB_DIR}/fastnoise")
+add_library("fastnoise" "${FASTNOISE_DIR}/FastNoise.cpp")
+target_include_directories("fastnoise" PRIVATE "${LIB_DIR}")
+
+
+function(buildFileWithNoise)
+    list(GET ARGV 0 SRCS)
+    list(GET ARGV 1 TARGET_NM)
+
+    # set(SRCS "${CMAKE_CURRENT_BINARY_DIR}/src/${STAGE_NM}/${PROJ_NAME}.cpp")
+
+    # Executable definition and properties
+    add_executable(${TARGET_NM} ${SRCS})
+    target_include_directories(${TARGET_NM} PRIVATE "${SRC_DIR}")
+    set_property(TARGET ${TARGET_NM} PROPERTY CXX_STANDARD 11)
+ 
+
+    target_link_libraries(${TARGET_NM} "glfw" "${GLFW_LIBRARIES}")
+    target_include_directories(${TARGET_NM} PRIVATE "${GLFW_DIR}/include")
+    target_compile_definitions(${TARGET_NM} PRIVATE "GLFW_INCLUDE_NONE")
+
+    target_include_directories(${TARGET_NM} PRIVATE "${GLAD_DIR}/include")
+    target_link_libraries(${TARGET_NM} "glad" "${CMAKE_DL_LIBS}")
+
+    target_include_directories(${TARGET_NM} PRIVATE "${SHADER_DIR}")
+    target_link_libraries(${TARGET_NM} "shader")
+
+    target_include_directories(${TARGET_NM} PRIVATE "${STB_DIR}")
+    target_link_libraries(${TARGET_NM} "stb_image")
+
+    target_include_directories(${TARGET_NM} PRIVATE "${FR_DIR}")
+    target_link_libraries(${TARGET_NM} "find_resource")
+
+    # glm
+    target_include_directories(${TARGET_NM} PRIVATE ${GLM_INCLUDE_DIR})
+
+    # fastnoise
+    target_link_libraries(${TARGET_NM} "fastnoise")
+    target_include_directories(${TARGET_NM} PRIVATE ${FASTNOISE_DIR})
+endFunction()
+
+
+
+# 1. Hello Noise
+set(SOURCES "${SRC_DIR}/I.Noise/1.Hello_Noise/hello_noise.cpp")
+set(TARGET_NM "I.1.Hello_Noise")
+buildFileWithNoise(${SOURCES} ${TARGET_NM})
