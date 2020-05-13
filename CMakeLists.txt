@@ -266,3 +266,8 @@ endFunction()
 set(SOURCES "${SRC_DIR}/1.Getting_Started/5.Transformations/1.Transformations.cpp")
 set(TARGET_NM "5.1.Transformations")
 buildFileWithGLM(${SOURCES} ${TARGET_NM})
+
+# Rotated container
+set(SOURCES "${SRC_DIR}/1.Getting_Started/5.Transformations/2.Rotation.cpp")
+set(TARGET_NM "5.2.RotatedRect")
+buildFileWithGLM(${SOURCES} ${TARGET_NM})
