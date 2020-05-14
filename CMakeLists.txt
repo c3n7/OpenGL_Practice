@@ -226,7 +226,7 @@ buildFileWithTexture(${SOURCES} ${TARGET_NM})
 #                                        GLM
 # ================================================================================
 
-set(GLM_INCLUDE_DIR "${LIB_DIR}/glm/glm/")
+set(GLM_INCLUDE_DIR "${LIB_DIR}/glm")
 
 function(buildFileWithGLM)
     list(GET ARGV 0 SRCS)
@@ -284,7 +284,7 @@ buildFileWithGLM(${SOURCES} ${TARGET_NM})
 # _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 # ========================================================================================
 
-set(GLM_INCLUDE_DIR "${LIB_DIR}/glm/glm/")
+set(GLM_INCLUDE_DIR "${LIB_DIR}/glm/")
 
 set(FASTNOISE_DIR "${LIB_DIR}/fastnoise")
 add_library("fastnoise" "${FASTNOISE_DIR}/FastNoise.cpp")
