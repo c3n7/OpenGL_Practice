@@ -328,7 +328,7 @@ function(buildFileWithNoise)
     if(MSVC)
         target_compile_options(${TARGET_NM} PRIVATE /W4 /WX)
     else()
-        target_compile_options(${TARGET_NM} PRIVATE -Wall -Wextra -pedantic -Werror)
+        target_compile_options(${TARGET_NM} PRIVATE -Wall -Wextra -Wconversion -pedantic -Werror)
     endif()
  
 
