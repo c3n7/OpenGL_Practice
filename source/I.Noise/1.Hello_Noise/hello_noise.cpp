@@ -115,7 +115,7 @@ int main() {
         for (int y = 0; y < mapWidth; y++) {
             // One dimension index
             int i = ((x)*mapWidth) + y;
-            heightMap[i] = myNoise.GetNoise(x, y);
+            heightMap[i] = myNoise.GetNoise((float)x, (float)y);
         }
     }
 
