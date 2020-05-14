@@ -100,34 +100,34 @@ int main() {
 
     FastNoise myNoise;                       // Create a FastNoise object
     myNoise.SetNoiseType(FastNoise::Perlin); // Set the desired noise type
-    myNoise.SetFrequency(0.02);
+    myNoise.SetFrequency(0.02f);
     // myNoise.SetCellularDistanceFunction(FastNoise::Natural);
     myNoise.SetSeed(3455);
 
-    float heightMap[512][512]; // 2D heightmap to create terrain
-    int mapWidth = sizeof(heightMap[0]) / sizeof(float);
+    int mapWidth = 1024;
+    float* heightMap =
+            new float[mapWidth * mapWidth]; // 2D heightmap to create terrain
     std::cout << mapWidth << std::endl;
 
-    GLubyte texData[mapWidth * mapWidth * 3];
+    GLubyte* texData = new GLubyte[mapWidth * mapWidth * 3];
 
     for (int x = 0; x < mapWidth; x++) {
         for (int y = 0; y < mapWidth; y++) {
-            heightMap[x][y] = myNoise.GetNoise(x, y);
+            // One dimension index
+            int i = ((x)*mapWidth) + y;
+            heightMap[i] = myNoise.GetNoise(x, y);
         }
     }
 
     float max = 0.0f;
     float min = 2.0f;
-    float maxStepSize = 1.0f, minStepSize = 1.0f;
 
-    for (int x = 0; x < mapWidth; x++) {
-        for (int y = 0; y < mapWidth; y++) {
-            if (heightMap[x][y] > max) {
-                max = heightMap[x][y];
-            }
-            if (heightMap[x][y] < min) {
-                min = heightMap[x][y];
-            }
+    for (int i = 0; i < mapWidth * mapWidth; i++) {
+        if (heightMap[i] > max) {
+            max = heightMap[i];
+        }
+        if (heightMap[i] < min) {
+            min = heightMap[i];
         }
     }
 
@@ -146,31 +146,22 @@ int main() {
     max = 0.0f;
     min = 2.0f;
 
-    for (int x = 0; x < mapWidth; x++) {
+    for (int i = 0; i < mapWidth * mapWidth; i++) {
         // std::cout << std::endl;
-        for (int y = 0; y < mapWidth; y++) {
-            heightMap[x][y] = (m * heightMap[x][y]) + c1;
-            if (heightMap[x][y] > max) {
-                max = heightMap[x][y];
-            }
-            if (heightMap[x][y] < min) {
-                min = heightMap[x][y];
-            }
-
-            // One dimension index
-            int index = ((x)*mapWidth) + y;
-            // y = 3x;
-            int colorIndex = (3 * index);
-            GLubyte colorVal = (GLubyte)(255 * heightMap[x][y]);
-            texData[colorIndex] = colorVal;
-            texData[colorIndex + 1] = colorVal;
-            texData[colorIndex + 2] = colorVal;
-
-            // std::cout << ((x) * mapWidth) + y << "{"
-            // << (int)texData[colorIndex] << ", "
-            // << (int)texData[colorIndex + 1] << ", "
-            // << (int)texData[colorIndex + 2] << "} ";
+        heightMap[i] = (m * heightMap[i]) + c1;
+        if (heightMap[i] > max) {
+            max = heightMap[i];
         }
+        if (heightMap[i] < min) {
+            min = heightMap[i];
+        }
+
+            // y = 3x;
+        int colorIndex = (3 * i);
+        GLubyte colorVal = (GLubyte)(255 * heightMap[i]);
+        texData[colorIndex] = colorVal;
+        texData[colorIndex + 1] = colorVal;
+        texData[colorIndex + 2] = colorVal;
     }
 
     std::cout << "\nMinimax After\n";
@@ -203,6 +194,9 @@ int main() {
             GL_RGB,
             GL_UNSIGNED_BYTE,
             texData);
+
+    delete[] heightMap;
+    delete[] texData;
 
     while (!glfwWindowShouldClose(window)) {
         // Input
