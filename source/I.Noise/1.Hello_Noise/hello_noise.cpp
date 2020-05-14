@@ -1,3 +1,4 @@
+#include <FastNoise.h>
 #include <GLFW/glfw3.h>
 #include <find_resource.h>
 #include <glad/glad.h>
@@ -5,9 +6,8 @@
 
 #include <iostream>
 
-#include <FastNoise.h>
-
-void framebuffer_size_callback(__attribute__((unused))GLFWwindow *window, int width, int height) {
+void framebuffer_size_callback(
+        __attribute__((unused)) GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
 }
 
@@ -17,13 +17,15 @@ void processInput(GLFWwindow* window) {
     }
 }
 
+// clang-format off
 float vertices[] = {
-        // positions               // colors            // texture coords
-        0.9f, 0.9f, 0.0f,       1.0f, 0.0f, 0.0f,    1.0f, 1.0f, // top right
-        0.9f, -0.9f, 0.0f,      0.0f, 1.0f, 0.0f,    1.0f, 0.0f, // bottom right
-        -0.9f, -0.9f, 0.0f,     0.0f, 0.0f, 1.0f,    0.0f, 0.0f, // bottom left
-        -0.9f, 0.9f, 0.0f,      1.0f, 1.0f, 0.0f,    0.0f, 1.0f, // top left
+    // positions               // colors            // texture coords
+    0.9f, 0.9f, 0.0f,       1.0f, 0.0f, 0.0f,    1.0f, 1.0f, // top right
+    0.9f, -0.9f, 0.0f,      0.0f, 1.0f, 0.0f,    1.0f, 0.0f, // bottom right
+    -0.9f, -0.9f, 0.0f,     0.0f, 0.0f, 1.0f,    0.0f, 0.0f, // bottom left
+    -0.9f, 0.9f, 0.0f,      1.0f, 1.0f, 0.0f,    0.0f, 1.0f, // top left
 };
+// clang-format on
 
 unsigned int indices[] = {0, 1, 3, 1, 2, 3};
 
@@ -89,30 +91,28 @@ int main() {
     glBindVertexArray(0);
 
     Resources resources;
-    std::string vertex = resources.getShaderPath(
-            "/I.Noise/1.Hello_Noise/vertex.glsl");
-    std::string fragment = resources.getShaderPath(
-            "/I.Noise/1.Hello_Noise/fragment.glsl");
+    std::string vertex =
+            resources.getShaderPath("/I.Noise/1.Hello_Noise/vertex.glsl");
+    std::string fragment =
+            resources.getShaderPath("/I.Noise/1.Hello_Noise/fragment.glsl");
 
     Shader ourShader(vertex.c_str(), fragment.c_str());
 
-    FastNoise myNoise; // Create a FastNoise object
+    FastNoise myNoise;                       // Create a FastNoise object
     myNoise.SetNoiseType(FastNoise::Perlin); // Set the desired noise type
     myNoise.SetFrequency(0.02);
     // myNoise.SetCellularDistanceFunction(FastNoise::Natural);
     myNoise.SetSeed(3455);
 
     float heightMap[512][512]; // 2D heightmap to create terrain
-    int mapWidth = sizeof(heightMap[0])/sizeof(float);
-    std::cout << mapWidth <<std::endl;
+    int mapWidth = sizeof(heightMap[0]) / sizeof(float);
+    std::cout << mapWidth << std::endl;
 
     GLubyte texData[mapWidth * mapWidth * 3];
 
-    for (int x = 0; x < mapWidth; x++)
-    {
-        for (int y = 0; y < mapWidth; y++)
-        {
-            heightMap[x][y] = myNoise.GetNoise(x,y);
+    for (int x = 0; x < mapWidth; x++) {
+        for (int y = 0; y < mapWidth; y++) {
+            heightMap[x][y] = myNoise.GetNoise(x, y);
         }
     }
 
@@ -120,12 +120,12 @@ int main() {
     float min = 2.0f;
     float maxStepSize = 1.0f, minStepSize = 1.0f;
 
-    for (int x = 0; x < mapWidth; x++){
+    for (int x = 0; x < mapWidth; x++) {
         for (int y = 0; y < mapWidth; y++) {
-            if(heightMap[x][y] > max) {
+            if (heightMap[x][y] > max) {
                 max = heightMap[x][y];
             }
-            if(heightMap[x][y] < min) {
+            if (heightMap[x][y] < min) {
                 min = heightMap[x][y];
             }
         }
@@ -150,26 +150,26 @@ int main() {
         // std::cout << std::endl;
         for (int y = 0; y < mapWidth; y++) {
             heightMap[x][y] = (m * heightMap[x][y]) + c1;
-            if(heightMap[x][y] > max) {
+            if (heightMap[x][y] > max) {
                 max = heightMap[x][y];
             }
-            if(heightMap[x][y] < min) {
+            if (heightMap[x][y] < min) {
                 min = heightMap[x][y];
             }
-     
+
             // One dimension index
-            int index = ((x) * mapWidth) + y;
+            int index = ((x)*mapWidth) + y;
             // y = 3x;
-            int colorIndex =  (3 * index);
+            int colorIndex = (3 * index);
             GLubyte colorVal = (GLubyte)(255 * heightMap[x][y]);
             texData[colorIndex] = colorVal;
             texData[colorIndex + 1] = colorVal;
             texData[colorIndex + 2] = colorVal;
 
             // std::cout << ((x) * mapWidth) + y << "{"
-                        // << (int)texData[colorIndex] << ", "
-                        // << (int)texData[colorIndex + 1] << ", "
-                        // << (int)texData[colorIndex + 2] << "} ";
+            // << (int)texData[colorIndex] << ", "
+            // << (int)texData[colorIndex + 1] << ", "
+            // << (int)texData[colorIndex + 2] << "} ";
         }
     }
 
@@ -188,9 +188,10 @@ int main() {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
-    std::cout << (int)texData[0] << " " << (int)texData[1] << " " << (int)texData[2] << std::endl;
-    std::cout << (int)texData[765] << " " << (int)texData[766]
-            << " " << (int)texData[767] << std::endl;
+    std::cout << (int)texData[0] << " " << (int)texData[1] << " "
+              << (int)texData[2] << std::endl;
+    std::cout << (int)texData[765] << " " << (int)texData[766] << " "
+              << (int)texData[767] << std::endl;
 
     // Pass the noise
     glTexImage2D(GL_TEXTURE_2D,

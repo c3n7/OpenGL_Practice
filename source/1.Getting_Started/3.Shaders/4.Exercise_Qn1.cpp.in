@@ -17,7 +17,13 @@ void processInput(GLFWwindow* window) {
     }
 }
 
-float vertices[] = {-0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.0f, 0.5f, 0.0f};
+// clang-format off
+float vertices[] = {
+    -0.5f, -0.5f, 0.0f, 
+    0.5f, -0.5f, 0.0f, 
+    0.0f, 0.5f, 0.0f
+};
+// clang-format on
 
 int main() {
     glfwInit();

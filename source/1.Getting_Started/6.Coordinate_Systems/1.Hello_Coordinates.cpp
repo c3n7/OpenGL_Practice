@@ -7,10 +7,10 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-
 #include <iostream>
 
-void framebuffer_size_callback(__attribute__((unused))GLFWwindow *window, int width, int height) {
+void framebuffer_size_callback(
+        __attribute__((unused)) GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
 }
 
@@ -20,13 +20,15 @@ void processInput(GLFWwindow* window) {
     }
 }
 
+// clang-format off
 float vertices[] = {
-        // positions               // colors            // texture coords
-        0.5f, 0.5f, 0.0f,       1.0f, 0.0f, 0.0f,    1.0f, 1.0f, // top right
-        0.5f, -0.5f, 0.0f,      0.0f, 1.0f, 0.0f,    1.0f, 0.0f, // bottom right
-        -0.5f, -0.5f, 0.0f,     0.0f, 0.0f, 1.0f,    0.0f, 0.0f, // bottom left
-        -0.5f, 0.5f, 0.0f,      1.0f, 1.0f, 0.0f,    0.0f, 1.0f, // top left
+    // positions               // colors            // texture coords
+    0.5f, 0.5f, 0.0f,       1.0f, 0.0f, 0.0f,    1.0f, 1.0f, // top right
+    0.5f, -0.5f, 0.0f,      0.0f, 1.0f, 0.0f,    1.0f, 0.0f, // bottom right
+    -0.5f, -0.5f, 0.0f,     0.0f, 0.0f, 1.0f,    0.0f, 0.0f, // bottom left
+    -0.5f, 0.5f, 0.0f,      1.0f, 1.0f, 0.0f,    0.0f, 1.0f, // top left
 };
+// clang-format on
 
 unsigned int indices[] = {0, 1, 3, 1, 2, 3};
 
@@ -160,14 +162,16 @@ int main() {
     ourShader.use();
     glUniform1i(glGetUniformLocation(ourShader.programID, "ourTexture1"), 0);
     ourShader.setInt("ourTexture2", 1);
- 
+
     glm::mat4 trans = glm::mat4(1.0f);
-    trans = glm::rotate(trans, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+    trans = glm::rotate(
+            trans, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
     trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
 
-    unsigned int transformLoc = glGetUniformLocation(ourShader.programID, "transform");
+    unsigned int transformLoc =
+            glGetUniformLocation(ourShader.programID, "transform");
     glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
-   
+
     while (!glfwWindowShouldClose(window)) {
         // Input
         processInput(window);
@@ -181,7 +185,7 @@ int main() {
         glBindTexture(GL_TEXTURE_2D, textures[0]);
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, textures[1]);
-       
+
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);

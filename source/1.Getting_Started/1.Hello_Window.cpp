@@ -1,12 +1,14 @@
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
+
 #include <iostream>
 
-void framebuffer_size_callback(__attribute__((unused))GLFWwindow *window, int width, int height) {
+void framebuffer_size_callback(
+        __attribute__((unused)) GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
 }
 
-void processInput(GLFWwindow *window) {
+void processInput(GLFWwindow* window) {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, true);
     }
@@ -19,7 +21,7 @@ int main() {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     // glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
-    GLFWwindow *window = glfwCreateWindow(800, 600, "Hello Window", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(800, 600, "Hello Window", NULL, NULL);
     if (window == NULL) {
         std::cerr << "Failed to create GLFW window" << std::endl;
         glfwTerminate();

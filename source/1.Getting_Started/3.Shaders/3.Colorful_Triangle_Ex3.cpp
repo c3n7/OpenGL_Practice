@@ -3,7 +3,8 @@
 
 #include <iostream>
 
-void framebuffer_size_callback(__attribute__((unused))GLFWwindow *window, int width, int height) {
+void framebuffer_size_callback(
+        __attribute__((unused)) GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
 }
 
@@ -13,27 +14,14 @@ void processInput(GLFWwindow* window) {
     }
 }
 
+// clang-format off
 float vertices[] = {
-        // positions         colors
-        -0.5f,
-        -0.5f,
-        0.0f,
-        1.0f,
-        0.0f,
-        0.0f, // bottom right
-        0.5f,
-        -0.5f,
-        0.0f,
-        0.0f,
-        1.0f,
-        0.0f, // bottom left
-        0.0f,
-        0.5f,
-        0.0f,
-        0.0f,
-        0.0f,
-        1.0f // top
+        // positions              colors
+        -0.5f, -0.5f, 0.0f,     1.0f, 0.0f, 0.0f, // bottom right
+        0.5f, -0.5f, 0.0f,      0.0f, 1.0f, 0.0f, // bottom left
+        0.0f, 0.5f, 0.0f,       0.0f, 0.0f, 1.0f // top
 };
+// clang-format on
 
 const char* vertexShaderSource =
         "#version 330 core\n"

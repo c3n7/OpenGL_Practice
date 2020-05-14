@@ -1,8 +1,10 @@
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
+
 #include <iostream>
 
-void framebuffer_size_callback(__attribute__((unused))GLFWwindow *window, int width, int height) {
+void framebuffer_size_callback(
+        __attribute__((unused)) GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
 }
 
@@ -12,20 +14,14 @@ void processInput(GLFWwindow* window) {
     }
 }
 
+// clang-format off
 float vertices[] = {
-        0.5f,
-        0.5f,
-        0.0f, // top right
-        0.5f,
-        -0.5f,
-        0.0f, // bottom right
-        -0.5f,
-        -0.5f,
-        0.0f, // bottom left
-        -0.5f,
-        0.5f,
-        0.0f // top left
+    0.5f, 0.5f, 0.0f, // top right
+    0.5f, -0.5f, 0.0f, // bottom right
+    -0.5f, -0.5f, 0.0f, // bottom left
+    -0.5f, 0.5f, 0.0f // top left
 };
+// clang-format on
 
 unsigned int indices[] = {0, 1, 3, 1, 2, 3};
 

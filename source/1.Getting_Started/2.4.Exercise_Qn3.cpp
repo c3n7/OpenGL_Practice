@@ -1,8 +1,10 @@
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
+
 #include <iostream>
 
-void framebuffer_size_callback(__attribute__((unused))GLFWwindow *window, int width, int height) {
+void framebuffer_size_callback(
+        __attribute__((unused)) GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
 }
 
@@ -12,28 +14,20 @@ void processInput(GLFWwindow* window) {
     }
 }
 
-float verticesTri1[] = {
-        // First triangle
-        -0.95f,
-        -0.5f,
-        0.0f,
-        -0.05f,
-        -0.5f,
-        0.0f,
-        -0.5f,
-        0.5f,
-        0.0f};
+// clang-format off
+float verticesTri1[] = { 
+    // First triangle
+    -0.95f, -0.5f, 0.0f,
+    -0.05f, -0.5f, 0.0f,
+    -0.5f, 0.5f, 0.0f,
+};
 float verticesTri2[] = {
-        // Second triangle
-        0.05f,
-        -0.5f,
-        0.0f,
-        0.95f,
-        -0.5f,
-        0.0f,
-        0.50f,
-        0.5f,
-        0.0f};
+    // Second triangle
+    0.05f, -0.5f, 0.0f,
+    0.95f, -0.5f, 0.0f,
+    0.50f, 0.5f, 0.0f
+};
+// clang-format on
 
 const char* vertexShaderSource =
         "#version 330 core\n"
@@ -94,7 +88,8 @@ int main() {
             verticesTri1,
             GL_STATIC_DRAW);
     // 3. set the vertex attribute pointers
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
+    glVertexAttribPointer(
+            0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
     glBindVertexArray(0);
 
@@ -107,7 +102,8 @@ int main() {
             verticesTri2,
             GL_STATIC_DRAW);
     // 3. set the vertex attribute pointers
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
+    glVertexAttribPointer(
+            0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
     glBindVertexArray(0);
 

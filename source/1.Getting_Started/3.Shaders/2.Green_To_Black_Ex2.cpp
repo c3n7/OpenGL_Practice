@@ -4,7 +4,8 @@
 #include <cmath>
 #include <iostream>
 
-void framebuffer_size_callback(__attribute__((unused))GLFWwindow *window, int width, int height) {
+void framebuffer_size_callback(
+        __attribute__((unused)) GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
 }
 
@@ -14,7 +15,13 @@ void processInput(GLFWwindow* window) {
     }
 }
 
-float vertices[] = {-0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.0f, 0.5f, 0.0f};
+// clang-format off
+float vertices[] = {
+    -0.5f, -0.5f, 0.0f, 
+    0.5f, -0.5f, 0.0f, 
+    0.0f, 0.5f, 0.0f
+};
+// clang-format on
 
 const char* vertexShaderSource =
         "#version 330 core\n"
