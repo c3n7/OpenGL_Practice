@@ -2,7 +2,6 @@
 #include <find_resource.h>
 #include <glad/glad.h>
 #include <shader.h>
-#include <stb_image.h>
 
 #include <iostream>
 
@@ -98,30 +97,74 @@ int main() {
     Shader ourShader(vertex.c_str(), fragment.c_str());
 
     FastNoise myNoise; // Create a FastNoise object
-    myNoise.SetNoiseType(FastNoise::Cellular); // Set the desired noise type
-    myNoise.SetFrequency(0.14);
-    myNoise.SetCellularDistanceFunction(FastNoise::Natural);
-    myNoise.SetSeed(1337);
+    myNoise.SetNoiseType(FastNoise::Perlin); // Set the desired noise type
+    myNoise.SetFrequency(0.02);
+    // myNoise.SetCellularDistanceFunction(FastNoise::Natural);
+    myNoise.SetSeed(3455);
 
-    float heightMap[1024][1024]; // 2D heightmap to create terrain
+    float heightMap[512][512]; // 2D heightmap to create terrain
     int mapWidth = sizeof(heightMap[0])/sizeof(float);
     std::cout << mapWidth <<std::endl;
 
-    unsigned char texData[mapWidth * mapWidth * 3];
+    GLubyte texData[mapWidth * mapWidth * 3];
 
     for (int x = 0; x < mapWidth; x++)
     {
-        // std::cout << std::endl;
         for (int y = 0; y < mapWidth; y++)
         {
             heightMap[x][y] = myNoise.GetNoise(x,y);
+        }
+    }
+
+    float max = 0.0f;
+    float min = 2.0f;
+    float maxStepSize = 1.0f, minStepSize = 1.0f;
+
+    for (int x = 0; x < mapWidth; x++){
+        for (int y = 0; y < mapWidth; y++) {
+            if(heightMap[x][y] > max) {
+                max = heightMap[x][y];
+            }
+            if(heightMap[x][y] < min) {
+                min = heightMap[x][y];
+            }
+        }
+    }
+
+    float m = 1 / (max - min);
+    float c1 = 0 - (m * min);
+    float c2 = 0 - (m * min);
+
+    std::cout << "\nMinimax Before\n";
+    std::cout << "\tMax: " << max << std::endl;
+    std::cout << "\tMin: " << min << std::endl;
+
+    if (c1 != c2) {
+        std::cout << "Ummm, help?" << std::endl;
+    }
+
+    max = 0.0f;
+    min = 2.0f;
+
+    for (int x = 0; x < mapWidth; x++) {
+        // std::cout << std::endl;
+        for (int y = 0; y < mapWidth; y++) {
+            heightMap[x][y] = (m * heightMap[x][y]) + c1;
+            if(heightMap[x][y] > max) {
+                max = heightMap[x][y];
+            }
+            if(heightMap[x][y] < min) {
+                min = heightMap[x][y];
+            }
+     
             // One dimension index
             int index = ((x) * mapWidth) + y;
             // y = 3x;
             int colorIndex =  (3 * index);
-            texData[colorIndex] = (int)(255 * heightMap[x][y]);
-            texData[colorIndex + 1] = (int)(255 * heightMap[x][y]);
-            texData[colorIndex + 2] = (int)(255 * heightMap[x][y]);
+            GLubyte colorVal = (GLubyte)(255 * heightMap[x][y]);
+            texData[colorIndex] = colorVal;
+            texData[colorIndex + 1] = colorVal;
+            texData[colorIndex + 2] = colorVal;
 
             // std::cout << ((x) * mapWidth) + y << "{"
                         // << (int)texData[colorIndex] << ", "
@@ -130,52 +173,35 @@ int main() {
         }
     }
 
-    float max = 0.0f;
-
-    for (int x = 0; x < mapWidth; x++){
-        for (int y = 0; y < mapWidth; y++) {
-            if(heightMap[x][y] > max) {
-                max = heightMap[x][y];
-            }
-        }
-    }
-
-    std::cout << "\nMax: " << max << std::endl;
+    std::cout << "\nMinimax After\n";
+    std::cout << "\tMax: " << max << std::endl;
+    std::cout << "\tMin: " << min << std::endl;
 
     unsigned int texture;
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture);
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    // glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
     float color[] = {1, 1, 1, 1};
     glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, color);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    // Load and generate the texture
-    int width, height, nrChannels;
-    unsigned char* data = stbi_load(
-            resources.getResourcePath("/textures/container.jpg").c_str(),
-            &width,
-            &height,
-            &nrChannels,
-            0);
+
     std::cout << (int)texData[0] << " " << (int)texData[1] << " " << (int)texData[2] << std::endl;
-    std::cout << (int)texData[765] << " " << (int)texData[766] << " " << (int)texData[767] << std::endl;
-    if (data) {
-        glTexImage2D(GL_TEXTURE_2D,
-                0,
-                GL_RGB,
-                mapWidth,
-                mapWidth,
-                0,
-                GL_RGB,
-                GL_UNSIGNED_BYTE,
-                texData);
-    } else {
-        std::cout << "Failed to load texture" << std::endl;
-    }
-    stbi_image_free(data);
+    std::cout << (int)texData[765] << " " << (int)texData[766]
+            << " " << (int)texData[767] << std::endl;
+
+    // Pass the noise
+    glTexImage2D(GL_TEXTURE_2D,
+            0,
+            GL_RGB,
+            mapWidth,
+            mapWidth,
+            0,
+            GL_RGB,
+            GL_UNSIGNED_BYTE,
+            texData);
 
     while (!glfwWindowShouldClose(window)) {
         // Input
