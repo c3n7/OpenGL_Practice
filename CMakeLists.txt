@@ -93,8 +93,6 @@ set(SOURCES "${SRC_DIR}/1.Getting_Started/3.Shaders/3.Colorful_Triangle_Ex3.cpp"
 set(TARGET_NM "3.3.Colorful_Triangle_Ex3")
 buildFile(${SOURCES} ${TARGET_NM})
 
-
-
 # shader
 set(SHADER_DIR "${LIB_DIR}/shader")
 add_library("shader" "${SHADER_DIR}/shader.cpp")
@@ -314,10 +312,24 @@ set(FASTNOISE_DIR "${LIB_DIR}/fastnoise")
 add_library("fastnoise" "${FASTNOISE_DIR}/FastNoise.cpp")
 target_include_directories("fastnoise" PRIVATE "${LIB_DIR}")
 
+# imgui
+set(IMGUI "${LIB_DIR}/imgui/imgui.cpp")
+set(IMGUI_DIR "${LIB_DIR}/imgui")
+set(IMGUI_DRAW "${LIB_DIR}/imgui/imgui_draw.cpp")
+set(IMGUI_DEMO "${LIB_DIR}/imgui/imgui_demo.cpp")
+set(IMGUI_WIDGETS "${LIB_DIR}/imgui/imgui_widgets.cpp")
+
+# OpenGL 3 implementation
+set(IMGUI_IMPL_GL3 "${LIB_DIR}/imgui/examples/imgui_impl_opengl3.cpp")
+
+# GLFW Implementation
+set(IMGUI_IMPL_GLFW "${LIB_DIR}/imgui/examples/imgui_impl_glfw.cpp")
 
 function(buildFileWithNoise)
     list(GET ARGV 0 SRCS)
     list(GET ARGV 1 TARGET_NM)
+    list(GET ARGV 2 USE_NOISE)
+    list(GET ARGV 3 USE_IMGUI)
 
     # set(SRCS "${CMAKE_CURRENT_BINARY_DIR}/src/${STAGE_NM}/${PROJ_NAME}.cpp")
 
@@ -327,11 +339,21 @@ function(buildFileWithNoise)
     set_property(TARGET ${TARGET_NM} PROPERTY CXX_STANDARD 11)
 
     if(MSVC)
-        # Go easy on GLM
+        # Go easy on GLM and IMGUI
         # target_compile_options(${TARGET_NM} PRIVATE /W4 /WX)
-        target_compile_options(${TARGET_NM} PRIVATE /W4)
+         if(USE_IMGUI)
+            target_compile_options(${TARGET_NM} PRIVATE /W4)
+        else()
+            target_compile_options(${TARGET_NM} PRIVATE /W4)
+        endif()
     else()
-        target_compile_options(${TARGET_NM} PRIVATE -Wall -Wextra -Wconversion -pedantic -Werror)
+        if(USE_IMGUI)
+            target_compile_options(${TARGET_NM} PRIVATE 
+                -Wall -Wextra -Wconversion -pedantic)
+        else()
+            target_compile_options(${TARGET_NM} PRIVATE 
+                -Wall -Wextra -Wconversion -pedantic -Werror)
+        endif()
     endif()
  
 
@@ -354,14 +376,40 @@ function(buildFileWithNoise)
     # glm
     target_include_directories(${TARGET_NM} PRIVATE ${GLM_INCLUDE_DIR})
 
-    # fastnoise
-    target_link_libraries(${TARGET_NM} "fastnoise")
-    target_include_directories(${TARGET_NM} PRIVATE ${FASTNOISE_DIR})
+    if(${USE_NOISE})
+        # fastnoise
+        target_link_libraries(${TARGET_NM} "fastnoise")
+        target_include_directories(${TARGET_NM} PRIVATE ${FASTNOISE_DIR})
+    endif()
+
+    if(${USE_IMGUI})
+        # target_link_libraries(${TARGET_NM} "imgui")
+        target_include_directories(${TARGET_NM} PRIVATE ${IMGUI_DIR})
+        target_include_directories(${TARGET_NM} PRIVATE "${IMGUI_DIR}/examples")
+        target_compile_definitions(${TARGET_NM} PRIVATE "IMGUI_IMPL_OPENGL_LOADER_GLAD")
+        target_sources(${TARGET_NM} PRIVATE ${IMGUI_IMPL_GLFW})
+        target_sources(${TARGET_NM} PRIVATE ${IMGUI_IMPL_GL3})
+        target_sources(${TARGET_NM} PRIVATE ${IMGUI})
+        target_sources(${TARGET_NM} PRIVATE ${IMGUI_DRAW})
+        target_sources(${TARGET_NM} PRIVATE ${IMGUI_DEMO})
+        target_sources(${TARGET_NM} PRIVATE ${IMGUI_WIDGETS})
+    endif()
 endFunction()
-
-
 
 # 1. Hello Noise
 set(SOURCES "${SRC_DIR}/I.Noise/1.Hello_Noise/hello_noise.cpp")
 set(TARGET_NM "I.1.Hello_Noise")
-buildFileWithNoise(${SOURCES} ${TARGET_NM})
+buildFileWithNoise(${SOURCES} ${TARGET_NM} TRUE FALSE)
+
+# _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
+# ========================================================================================
+#                                     Dear IMGUI
+# _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
+# ========================================================================================
+
+# 1. Hello Imgui
+set(SOURCES "${SRC_DIR}/II.imGUI/1.Hello_imGUI/main.cpp")
+set(TARGET_NM "II.1.Hello_imGUI")
+buildFileWithNoise(${SOURCES} ${TARGET_NM} TRUE TRUE)
+
+
