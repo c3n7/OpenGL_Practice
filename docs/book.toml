@@ -1,0 +1,6 @@
+[book]
+authors = ["Timothy Karani"]
+language = "en"
+multilingual = false
+src = "src"
+title = "OpenGL Notes"

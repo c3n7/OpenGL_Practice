@@ -2,3 +2,5 @@ build/
 *.swp
 .clangd/
 compile_commands.json
+
+docs/book/
