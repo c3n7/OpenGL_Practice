@@ -59,7 +59,7 @@ class nullptr_t
     void operator&() const;  // Can't take address of nullptr
 
 }; 
-const nullptr_t nullptr = {};
+const nullptr_t null = {};
 #endif
 
 class FastNoise
@@ -214,7 +214,11 @@ protected:
 
 	CellularDistanceFunction m_cellularDistanceFunction = Euclidean;
 	CellularReturnType m_cellularReturnType = CellValue;
+#if defined(__llvm__)
+	FastNoise* m_cellularNoiseLookup = null;
+#else
 	FastNoise* m_cellularNoiseLookup = nullptr;
+#endif
 	int m_cellularDistanceIndex0 = 0;
 	int m_cellularDistanceIndex1 = 1;
 	float m_cellularJitter = 0.45f;
