@@ -9,12 +9,10 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     steps:
     - uses: actions/checkout@v2
-    - name: install dependencies
-      run: sudo apt-get install xorg-dev
     - name: fetch submodules
       run: git submodule init
     - name: update submodules
