@@ -13,6 +13,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: install dependencies
+      run: sudo apt-get install xorg-dev
     - name: fetch submodules
       run: git submodule init
     - name: update submodules
