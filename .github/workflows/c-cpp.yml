@@ -13,6 +13,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: fetch submodules
+    - run: |
+        git submodule init
+        git submodule update
     - name: generate make files
       run: cmake .
     - name: compile
