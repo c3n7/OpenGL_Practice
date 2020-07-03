@@ -5,13 +5,13 @@
 - macOS Catalina ![build](https://github.com/c3n7/opengl-practice/workflows/build/badge.svg)
 
 ## Screenshots
-| #  | Lesson                                                                  | Screenshot                                                                          |
-| :- | :---------------------------------------------------------------------- | :---------------------------------------------------------------------------------- |
-|  1 | Hello window                                                            | ![hello window](resources/screenshots/hello-window.png)                             |
-|  2 | Hello triangle                                                          | ![hello triangle](resources/screenshots/hello-triangle.png)                         |
-|  3 | Hello rectangle                                                         | ![hello rectangle](resources/screenshots/hello-rectangle.png)                       |
-|  4 | Shaders                                                                 | ![shaders](resources/screenshots/shaders.png)                                       |
-|  5 | Textures                                                                | ![textures](resources/screenshots/textures.png)                                     |
-|  6 | Transformations                                                         | ![transformations](resources/screenshots/transformations.png)                       |
-|  7 | Hello noise                                                             | ![hello noise](resources/screenshots/hello-noise.png)                               |
-|  8 | Hello ImGUI                                                             | ![hello imgui](resources/screenshots/hello-imgui.png)                               |
+| #  | Lesson                                                          | Screenshot                                                                          |
+| :- | :-------------------------------------------------------------- | :---------------------------------------------------------------------------------- |
+|  1 | Hello window                                                    | <img src="resources/screenshots/hello-window.png" width="300">                      |
+|  2 | Hello triangle                                                  | <img src="resources/screenshots/hello-triangle.png" width="300">                    |
+|  3 | Hello rectangle                                                 | <img src="resources/screenshots/hello-rectangle.png" width="300">                   |
+|  4 | Shaders                                                         | <img src="resources/screenshots/shaders.png" width="300">                           |
+|  5 | Textures                                                        | <img src="resources/screenshots/textures.png" width="300">                          |
+|  6 | Transformations                                                 | <img src="resources/screenshots/transformations.png" width="300">                   |
+|  7 | Hello noise                                                     | <img src="resources/screenshots/hello-noise.png" width="300">                       |
+|  8 | Hello ImGUI                                                     | <img src="resources/screenshots/hello-imgui.png" width="300">                       |
