@@ -18,7 +18,7 @@ $ cmake --build . -j n
 Where `n` is the number of cores you wish to use to compile. 
 
 ## Running
-#### Linux and Mac OS
+#### Linux and macOS
 The executables should be in the `build` directory. Launch them in the terminal, for example:
 ```shell
 $ ./Hello_Window
