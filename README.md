@@ -8,6 +8,7 @@
 This has been tested and found to work in these systems; Windows, macOS and Linux.
 ```shell
 $ mkdir build
+$ cd build
 $ cmake ..
 $ cmake --build .
 ```
