@@ -37,6 +37,6 @@ The executables should be in the `build/Debug` directory.
 |  4 | Shaders                       | <img src="resources/screenshots/shaders.png" width="300">               |
 |  5 | Textures                      | <img src="resources/screenshots/textures.png" width="300">              |
 |  6 | Transformations               | <img src="resources/screenshots/transformations.png" width="300">       |
-|  6 | Coordinate Systems            | <img src="resources/screenshots/coordinate_systems.png" width="300">       |
-|  7 | Hello noise                   | <img src="resources/screenshots/hello-noise.png" width="300">           |
-|  8 | Hello ImGUI                   | <img src="resources/screenshots/hello-imgui.png" width="300">           |
+|  7 | Coordinate systems            | <img src="resources/screenshots/coordinate_systems.png" width="300">       |
+|  8 | Hello noise                   | <img src="resources/screenshots/hello-noise.png" width="300">           |
+|  9 | Hello ImGUI                   | <img src="resources/screenshots/hello-imgui.png" width="300">           |
