@@ -302,9 +302,14 @@ set(SOURCES "${SRC_DIR}/1.Getting_Started/6.Coordinate_Systems/1.Hello_Coordinat
 set(TARGET_NM "6.1.Hello_Coordinates")
 buildFileWithGLM(${SOURCES} ${TARGET_NM})
 
-# Coordinate Hello
+# One Cube
 set(SOURCES "${SRC_DIR}/1.Getting_Started/6.Coordinate_Systems/2.One_Cube.cpp")
 set(TARGET_NM "6.2.One_Cube")
+buildFileWithGLM(${SOURCES} ${TARGET_NM})
+
+# Many Cubes
+set(SOURCES "${SRC_DIR}/1.Getting_Started/6.Coordinate_Systems/3.Many_Cubes.cpp")
+set(TARGET_NM "6.3.Many_Cubes")
 buildFileWithGLM(${SOURCES} ${TARGET_NM})
 
 # _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
