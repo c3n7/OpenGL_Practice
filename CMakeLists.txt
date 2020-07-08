@@ -238,9 +238,11 @@ set(TARGET_NM "4.2.Texture_Units")
 buildFileWithTexture(${SOURCES} ${TARGET_NM})
 
 
-# ================================================================================
+# _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
+# ========================================================================================
 #                                        GLM
-# ================================================================================
+# _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
+# ========================================================================================
 
 set(GLM_INCLUDE_DIR "${LIB_DIR}/glm")
 
@@ -298,6 +300,11 @@ buildFileWithGLM(${SOURCES} ${TARGET_NM})
 # Coordinate Hello
 set(SOURCES "${SRC_DIR}/1.Getting_Started/6.Coordinate_Systems/1.Hello_Coordinates.cpp")
 set(TARGET_NM "6.1.Hello_Coordinates")
+buildFileWithGLM(${SOURCES} ${TARGET_NM})
+
+# Coordinate Hello
+set(SOURCES "${SRC_DIR}/1.Getting_Started/6.Coordinate_Systems/2.One_Cube.cpp")
+set(TARGET_NM "6.2.One_Cube")
 buildFileWithGLM(${SOURCES} ${TARGET_NM})
 
 # _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
