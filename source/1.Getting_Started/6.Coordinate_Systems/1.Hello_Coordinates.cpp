@@ -9,6 +9,9 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <iostream>
 
+int screenWidth = 800;
+int screenHeight = 600;
+
 #if defined(__GNUC__) || defined(__GNUG__)
 void framebuffer_size_callback(
         __attribute__((unused)) GLFWwindow* window, int width, int height) {
@@ -17,6 +20,8 @@ void framebuffer_size_callback(
 #elif defined(_MSC_VER)
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     (void)window;
+    screenWidth = height;
+    screenHeight = height;
     glViewport(0, 0, width, height);
 }
 #endif
@@ -162,22 +167,34 @@ int main() {
     stbi_image_free(data);
 
     std::string vertex = resources.getShaderPath(
-            "/1.Getting_Started/5.Transformations/1.vertex.glsl");
+            "/1.Getting_Started/6.Coordinate_Systems/1.vertex.glsl");
     std::string fragment = resources.getShaderPath(
-            "/1.Getting_Started/5.Transformations/1.fragment.glsl");
+            "/1.Getting_Started/6.Coordinate_Systems/1.fragment.glsl");
+
     Shader ourShader(vertex.c_str(), fragment.c_str());
     ourShader.use();
+
     glUniform1i(glGetUniformLocation(ourShader.programID, "ourTexture1"), 0);
     ourShader.setInt("ourTexture2", 1);
 
-    glm::mat4 trans = glm::mat4(1.0f);
-    trans = glm::rotate(
-            trans, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-    trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
+    glm::mat4 model = glm::mat4(1.0f);
+    glm::mat4 view = glm::mat4(1.0f);
+    glm::mat4 projection = glm::mat4(1.0f);
+    model = glm::rotate(
+            model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+    projection = glm::perspective(glm::radians(45.0f),
+            (float)screenWidth / (float)screenHeight,
+            0.1f,
+            100.0f);
 
-    unsigned int transformLoc =
-            glGetUniformLocation(ourShader.programID, "transform");
-    glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
+    unsigned int modelLoc = glGetUniformLocation(ourShader.programID, "model");
+    unsigned int viewLoc = glGetUniformLocation(ourShader.programID, "view");
+    unsigned int projectionLoc =
+            glGetUniformLocation(ourShader.programID, "projection");
+    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+    glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+    glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
     while (!glfwWindowShouldClose(window)) {
         // Input
