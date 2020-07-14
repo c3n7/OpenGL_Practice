@@ -1,11 +1,9 @@
 #include <GLFW/glfw3.h>
+#include <find_resource.h>
 #include <glad/glad.h>
 #include <shader.h>
 
 #include <iostream>
-
-#define VERTEX_PATH @VERTEX_PATH@
-#define FRAGMENT_PATH @FRAGMENT_PATH@
 
 #if defined(__GNUC__) || defined(__GNUG__)
 void framebuffer_size_callback(
@@ -71,7 +69,13 @@ int main() {
     glEnableVertexAttribArray(0);
     glBindVertexArray(0);
 
-    Shader ourShader(VERTEX_PATH, FRAGMENT_PATH);
+    Resources resources;
+    std::string vertex = resources.getShaderPath(
+            "/1.Getting_Started/3.Shaders/6.vertex.glsl");
+    std::string fragment = resources.getShaderPath(
+            "/1.Getting_Started/3.Shaders/6.fragment.glsl");
+
+    Shader ourShader(vertex.c_str(), fragment.c_str());
 
     while (!glfwWindowShouldClose(window)) {
         // Input

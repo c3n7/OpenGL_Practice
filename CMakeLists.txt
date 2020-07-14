@@ -43,35 +43,27 @@ function(buildFile)
     target_link_libraries(${PROJ_NAME} "glad" "${CMAKE_DL_LIBS}")
 endFunction()
 
-# Hello Window
-set(SOURCES "${SRC_DIR}/1.Getting_Started/1.Hello_Window.cpp")
-set(TARGET_NM "1.Hello_Window")
-buildFile(${SOURCES} ${TARGET_NM})
+set(tobuildshaderless_sources
+    "${SRC_DIR}/1.Getting_Started/1.Hello_Window.cpp"
+    "${SRC_DIR}/1.Getting_Started/2.0.Hello_Triangle.cpp"
+    "${SRC_DIR}/1.Getting_Started/2.1.Hello_Rectangle.cpp"
+    "${SRC_DIR}/1.Getting_Started/2.2.Exercise_Qn1.cpp"
+    "${SRC_DIR}/1.Getting_Started/2.3.Exercise_Qn2.cpp"
+    "${SRC_DIR}/1.Getting_Started/2.4.Exercise_Qn3.cpp"
+)
 
-# Hello Triangle
-set(SOURCES "${SRC_DIR}/1.Getting_Started/2.0.Hello_Triangle.cpp")
-set(TARGET_NM "2.0.Hello_Triangle")
-buildFile(${SOURCES} ${TARGET_NM})
+set(tobuildshaderless_targets
+    "1.Hello_Window"
+    "2.0.Hello_Triangle"
+    "2.1.Hello_Rectangle"
+    "2.2.Exercise_Qn1"
+    "2.3.Exercise_Qn2"
+    "2.4.Exercise_Qn3"
+)
 
-# Hello Rectangle
-set(SOURCES "${SRC_DIR}/1.Getting_Started/2.1.Hello_Rectangle.cpp")
-set(TARGET_NM "2.1.Hello_Rectangle")
-buildFile(${SOURCES} ${TARGET_NM})
-
-# Hello Triangle Exercise Qn 1
-set(SOURCES "${SRC_DIR}/1.Getting_Started/2.2.Exercise_Qn1.cpp")
-set(TARGET_NM "2.2.Exercise_Qn1")
-buildFile(${SOURCES} ${TARGET_NM})
-
-# Hello Triangle Exercise Qn 2
-set(SOURCES "${SRC_DIR}/1.Getting_Started/2.3.Exercise_Qn2.cpp")
-set(TARGET_NM "2.3.Exercise_Qn2")
-buildFile(${SOURCES} ${TARGET_NM})
-
-# Hello Triangle Exercise Qn 3
-set(SOURCES "${SRC_DIR}/1.Getting_Started/2.4.Exercise_Qn3.cpp")
-set(TARGET_NM "2.4.Exercise_Qn3")
-buildFile(${SOURCES} ${TARGET_NM})
+foreach(source target IN ZIP_LISTS  tobuildshaderless_sources tobuildshaderless_targets)
+    buildFile(${source} ${target})
+endforeach()
 
 # =============================================================================
 #                                 Shaders
@@ -98,22 +90,27 @@ set(SHADER_DIR "${LIB_DIR}/shader")
 add_library("shader" "${SHADER_DIR}/shader.cpp")
 target_include_directories("shader" PRIVATE "${SHADER_DIR}" "${GLAD_DIR}/include")
 
+# find_resource
+set(FR_DIR "${LIB_DIR}/find_resource")
+set(RESOURCES_PATH "${CMAKE_CURRENT_SOURCE_DIR}/resources")
+set(PROJECT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/source")
+configure_file (
+    "${FR_DIR}/find_resource.h"
+    "${CMAKE_CURRENT_BINARY_DIR}/libraries/find_resource/find_resource.h" @ONLY
+)
+configure_file (
+    "${FR_DIR}/find_resource.cpp"
+    "${CMAKE_CURRENT_BINARY_DIR}/libraries/find_resource/find_resource.cpp" @ONLY
+)
+
+set(FR_DIR "${CMAKE_CURRENT_BINARY_DIR}/libraries/find_resource")
+add_library("find_resource" "${FR_DIR}/find_resource.cpp")
+target_include_directories("find_resource" PRIVATE "${LIB_DIR}")
+
+
 function(buildFileWithShader)
     list(GET ARGV 0 SRCS)
     list(GET ARGV 1 PROJ_NAME)
-    list(GET ARGV 2 STAGE_NM)
-    list(GET ARGV 3 V_PATH)
-    list(GET ARGV 4 F_PATH)
-
-    set (VERTEX_PATH "\"${V_PATH}\"")
-    set (FRAGMENT_PATH "\"${F_PATH}\"")
-
-    configure_file (
-        "${SRCS}.in"
-        "${CMAKE_CURRENT_BINARY_DIR}/src/${STAGE_NM}/${PROJ_NAME}.cpp" @ONLY
-    )
-
-    set(SRCS "${CMAKE_CURRENT_BINARY_DIR}/src/${STAGE_NM}/${PROJ_NAME}.cpp")
 
     # Executable definition and properties
     add_executable(${PROJ_NAME} ${SRCS})
@@ -135,33 +132,27 @@ function(buildFileWithShader)
 
     target_include_directories(${PROJ_NAME} PRIVATE "${SHADER_DIR}")
     target_link_libraries(${PROJ_NAME} "shader")
+
+    target_include_directories(${TARGET_NM} PRIVATE "${FR_DIR}")
+    target_link_libraries(${TARGET_NM} "find_resource")
 endFunction()
 
 # Shaders Exercise_Qn1
 # Source files
 set(SOURCES "${SRC_DIR}/1.Getting_Started/3.Shaders/4.Exercise_Qn1.cpp")
 set(TARGET_NM "3.4.Exercise_Qn1")
-set(STAGE_NM "1.Getting_Started/3.Shaders/")
-set(V_PATH "${SRC_DIR}1.Getting_Started/3.Shaders/4.vertex.glsl")
-set(F_PATH "${SRC_DIR}1.Getting_Started/3.Shaders/4.fragment.glsl")
 buildFileWithShader(${SOURCES} ${TARGET_NM} ${STAGE_NM} ${V_PATH} ${F_PATH})
 
 # Shaders Exercise_Qn2
 # Source files
 set(SOURCES "${SRC_DIR}/1.Getting_Started/3.Shaders/5.Exercise_Qn2.cpp")
 set(TARGET_NM "3.5.Exercise_Qn2")
-set(STAGE_NM "1.Getting_Started/3.Shaders/")
-set(V_PATH "${SRC_DIR}1.Getting_Started/3.Shaders/5.vertex.glsl")
-set(F_PATH "${SRC_DIR}1.Getting_Started/3.Shaders/5.fragment.glsl")
 buildFileWithShader(${SOURCES} ${TARGET_NM} ${STAGE_NM} ${V_PATH} ${F_PATH})
 
 # Shaders Exercise_Qn3
 # Source files
 set(SOURCES "${SRC_DIR}/1.Getting_Started/3.Shaders/6.Exercise_Qn3.cpp")
 set(TARGET_NM "3.6.Exercise_Qn3")
-set(STAGE_NM "1.Getting_Started/3.Shaders/")
-set(V_PATH "${SRC_DIR}1.Getting_Started/3.Shaders/6.vertex.glsl")
-set(F_PATH "${SRC_DIR}1.Getting_Started/3.Shaders/6.fragment.glsl")
 buildFileWithShader(${SOURCES} ${TARGET_NM} ${STAGE_NM} ${V_PATH} ${F_PATH})
 
 
@@ -169,23 +160,6 @@ buildFileWithShader(${SOURCES} ${TARGET_NM} ${STAGE_NM} ${V_PATH} ${F_PATH})
 set(STB_DIR "${LIB_DIR}/stb_image")
 add_library("stb_image" "${STB_DIR}/stb_image.cpp")
 target_include_directories("stb_image" PRIVATE "${STB_DIR}")
-
-# find_resource
-set(FR_DIR "${LIB_DIR}/find_resource")
-set(RESOURCES_PATH "${CMAKE_CURRENT_SOURCE_DIR}/resources")
-set(PROJECT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/source")
-configure_file (
-    "${FR_DIR}/find_resource.h"
-    "${CMAKE_CURRENT_BINARY_DIR}/libraries/find_resource/find_resource.h" @ONLY
-)
-configure_file (
-    "${FR_DIR}/find_resource.cpp"
-    "${CMAKE_CURRENT_BINARY_DIR}/libraries/find_resource/find_resource.cpp" @ONLY
-)
-
-set(FR_DIR "${CMAKE_CURRENT_BINARY_DIR}/libraries/find_resource")
-add_library("find_resource" "${FR_DIR}/find_resource.cpp")
-target_include_directories("find_resource" PRIVATE "${LIB_DIR}")
 
 
 # ======================================================================================
@@ -284,33 +258,25 @@ function(buildFileWithGLM)
     target_include_directories(${TARGET_NM} PRIVATE ${GLM_INCLUDE_DIR})
 endFunction()
 
+set(tobuildwithglm_sources
+    "${SRC_DIR}/1.Getting_Started/5.Transformations/1.Transformations.cpp"
+    "${SRC_DIR}/1.Getting_Started/5.Transformations/2.Rotation.cpp"
+    "${SRC_DIR}/1.Getting_Started/6.Coordinate_Systems/1.Hello_Coordinates.cpp"
+    "${SRC_DIR}/1.Getting_Started/6.Coordinate_Systems/2.One_Cube.cpp"
+    "${SRC_DIR}/1.Getting_Started/6.Coordinate_Systems/3.Many_Cubes.cpp"
+)
 
-# 5.TRANSFORMATIONS
-# Transformed container
-set(SOURCES "${SRC_DIR}/1.Getting_Started/5.Transformations/1.Transformations.cpp")
-set(TARGET_NM "5.1.Transformations")
-buildFileWithGLM(${SOURCES} ${TARGET_NM})
+set(tobuildwithglm_targets
+    "5.1.Transformations"
+    "5.2.RotatedRect"
+    "5.3.Hello_Coordinates"
+    "5.4.One_Cube"
+    "5.5.Many_Cubes"
+)
 
-# Rotated container
-set(SOURCES "${SRC_DIR}/1.Getting_Started/5.Transformations/2.Rotation.cpp")
-set(TARGET_NM "5.2.RotatedRect")
-buildFileWithGLM(${SOURCES} ${TARGET_NM})
-
-# 6. COORDINATE SYSTEMS
-# Coordinate Hello
-set(SOURCES "${SRC_DIR}/1.Getting_Started/6.Coordinate_Systems/1.Hello_Coordinates.cpp")
-set(TARGET_NM "6.1.Hello_Coordinates")
-buildFileWithGLM(${SOURCES} ${TARGET_NM})
-
-# One Cube
-set(SOURCES "${SRC_DIR}/1.Getting_Started/6.Coordinate_Systems/2.One_Cube.cpp")
-set(TARGET_NM "6.2.One_Cube")
-buildFileWithGLM(${SOURCES} ${TARGET_NM})
-
-# Many Cubes
-set(SOURCES "${SRC_DIR}/1.Getting_Started/6.Coordinate_Systems/3.Many_Cubes.cpp")
-set(TARGET_NM "6.3.Many_Cubes")
-buildFileWithGLM(${SOURCES} ${TARGET_NM})
+foreach(source target IN ZIP_LISTS  tobuildwithglm_sources tobuildwithglm_targets)
+    buildFileWithGLM(${source} ${target})
+endforeach()
 
 # _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 # ========================================================================================
