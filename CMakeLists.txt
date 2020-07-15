@@ -185,7 +185,7 @@ endforeach()
 
 # _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 # ========================================================================================
-#                                 Shaders
+#                                 Shaders and Textures
 # _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 # ========================================================================================
 set(tobuildwithshaders_sources
@@ -270,6 +270,10 @@ set(SOURCES "${SRC_DIR}/I.Noise/1.Hello_Noise/hello_noise.cpp")
 set(TARGET_NM "I.1.Hello_Noise")
 buildFile(${SOURCES} ${TARGET_NM} TRUE TRUE TRUE TRUE FALSE)
 
+# 2. Hello imGUI
+set(SOURCES "${SRC_DIR}/I.Noise/2.imGUI_Noise/imgui_noise.cpp")
+set(TARGET_NM "I.2.imGUI_Noise")
+buildFile(${SOURCES} ${TARGET_NM} TRUE TRUE TRUE TRUE TRUE)
 # _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 # ========================================================================================
 #                                     Dear IMGUI
