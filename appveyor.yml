@@ -5,6 +5,5 @@ build_script:
     - git submodule update
     - md build
     - cd build
-    - cmake --version
     - cmake ..
     - cmake --build .

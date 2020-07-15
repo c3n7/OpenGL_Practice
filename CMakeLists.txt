@@ -175,7 +175,11 @@ set(tobuildshaderless_targets
     "3.3.Colorful_Triangle_Ex3"
 )
 
-foreach(source target IN ZIP_LISTS tobuildshaderless_sources tobuildshaderless_targets)
+list(LENGTH tobuildshaderless_targets len)
+math(EXPR len2 "${len} - 1")
+foreach(i RANGE ${len2})
+    list(GET tobuildshaderless_sources ${i} source)
+    list(GET tobuildshaderless_targets ${i} target)
     buildFile(${source} ${target} FALSE FALSE FALSE FALSE FALSE)
 endforeach()
 
@@ -196,7 +200,11 @@ set(tobuildwithshaders_targets
     "3.6.Exercise_Qn3"
 )
 
-foreach(source target IN ZIP_LISTS  tobuildwithshaders_sources tobuildwithshaders_targets)
+list(LENGTH tobuildwithshaders_targets len)
+math(EXPR len2 "${len} - 1")
+foreach(i RANGE ${len2})
+    list(GET tobuildwithshaders_sources ${i} source)
+    list(GET tobuildwithshaders_targets ${i} target)
     buildFile(${source} ${target} TRUE FALSE FALSE FALSE FALSE)
 endforeach()
 
@@ -211,8 +219,12 @@ set(tobuildwithtextures_targets
     "4.2.Texture_Units"
 )
 
-foreach(source target IN ZIP_LISTS  tobuildwithtextures_sources tobuildwithtextures_targets)
-    buildFile(${source} ${target} TRUE TRUE FALSE FALSE FALSE)
+list(LENGTH tobuildwithtextures_sources len)
+math(EXPR len2 "${len} - 1")
+foreach(i RANGE ${len2})
+    list(GET tobuildwithtextures_sources ${i} source)
+    list(GET tobuildwithtextures_targets ${i} target)
+    buildFile(${source} ${target} TRUE TRUE TRUE FALSE FALSE)
 endforeach()
 
 # _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
@@ -239,7 +251,11 @@ set(tobuildwithglm_targets
     "5.5.Many_Cubes"
 )
 
-foreach(source target IN ZIP_LISTS  tobuildwithglm_sources tobuildwithglm_targets)
+list(LENGTH tobuildwithglm_sources len)
+math(EXPR len2 "${len} - 1")
+foreach(i RANGE ${len2})
+    list(GET tobuildwithglm_sources ${i} source)
+    list(GET tobuildwithglm_targets ${i} target)
     buildFile(${source} ${target} TRUE TRUE TRUE FALSE FALSE)
 endforeach()
 
