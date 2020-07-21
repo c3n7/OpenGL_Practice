@@ -31,9 +31,9 @@ void processInput(GLFWwindow* window) {
 int mapWidth = 1024;
 GLubyte* texData = new GLubyte[mapWidth * mapWidth * 3];
 
-void generateNoiseTexture(float frequency) {
-    FastNoise myNoise;                       // Create a FastNoise object
-    myNoise.SetNoiseType(FastNoise::Perlin); // Set the desired noise type
+void generateNoiseTexture(float frequency, FastNoise::NoiseType noiseType) {
+    FastNoise myNoise;               // Create a FastNoise object
+    myNoise.SetNoiseType(noiseType); // Set the desired noise type
     myNoise.SetFrequency(frequency);
     // myNoise.SetCellularDistanceFunction(FastNoise::Natural);
     myNoise.SetSeed(3455);
@@ -182,7 +182,8 @@ int main() {
 
     Shader ourShader(vertex.c_str(), fragment.c_str());
 
-    generateNoiseTexture(0.02f);
+    // generateNoiseTexture(0.02f, FastNoise::Perlin);
+    generateNoiseTexture(0.02f, (FastNoise::NoiseType)2);
 
     unsigned int texture;
     glGenTextures(1, &texture);
@@ -240,16 +241,33 @@ int main() {
     ImVec4 clear_color = ImVec4(0.102f, 0.110f, 0.118f, 1.0f);
 
     float last_f = 0.0f;
+    int last_noise_type = 2;
+    // const char* noises[] = {"Noise Type",
+    // "Value",
+    // "Value Fractal",
+    // "Perlin",
+    // "Perlin Fractal",
+    // "Simplex",
+    // "Simplex Fractal",
+    // "Cellular",
+    // "White Noise",
+    // "Cubic",
+    // "Cubic Fractal"};
+
+    static int noise_type = 2;
+    float current_rand = 0.02f;
+    float previous_rand = 0.02f;
 
     while (!glfwWindowShouldClose(window)) {
         // Input
         processInput(window);
 
-        static float f = 0.0f;
+        static float f = 0.02f;
 
-        if (f != last_f) {
-            generateNoiseTexture(f);
+        if (f != last_f || current_rand != previous_rand) {
+            generateNoiseTexture(f, (FastNoise::NoiseType)noise_type);
             last_f = f;
+            previous_rand = current_rand;
 
             // Pass the noise
             glTexImage2D(GL_TEXTURE_2D,
@@ -268,11 +286,14 @@ int main() {
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
+        // 1. Show the big demo window
+        // (Most of the sample code is in ImGui::ShowDemoWindow()!
+        // You can browse its code to learn more about Dear ImGui!).
         if (show_demo_window)
-        // ImGui::ShowDemoWindow(&show_demo_window);
+            // ImGui::ShowDemoWindow(&show_demo_window);
 
-        // 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
+        // 2. Show a simple window that we create ourselves.
+        // We use a Begin/End pair to created a named window.
         {
             static int counter = 0;
 
@@ -280,7 +301,7 @@ int main() {
             ImGui::Begin("Hello, noise!");
 
             // Display some text (you can use a format strings too)
-            ImGui::Text("Perlin Noise.");
+            ImGui::Text("Noise Settings.");
 
             // Edit bools storing our window open/close state
             // ImGui::Checkbox("Demo Window", &show_demo_window);
@@ -293,8 +314,20 @@ int main() {
             ImGui::ColorEdit3("clear color",
                     (float*)&clear_color); // Edit 3 floats representing a color
 
-            if (ImGui::Button(
-                        "Button")) // Buttons return true when clicked (most widgets return true when edited/activated)
+            if (ImGui::Combo("Noise Type",
+                        &noise_type,
+                        "Value\0Value Fractal"
+                        "\0Perlin\0Perlin Fractal"
+                        "\0Simplex\0Simplex Fractal"
+                        "\0Cellular\0White Noise"
+                        "\0Cubic\0Cubic Fractal\0\0")) {
+                std::cout << "Last Noise: " << last_noise_type
+                          << "\tCurrent Noise: " << noise_type << std::endl;
+                current_rand = (float) rand() / (float) RAND_MAX;
+            }
+
+            // Buttons return true when clicked (most widgets return true when edited/activated)
+            if (ImGui::Button("Button"))
                 counter++;
             ImGui::SameLine();
             ImGui::Text("counter = %d", counter);
@@ -307,8 +340,9 @@ int main() {
 
         // 3. Show another simple window.
         if (show_another_window) {
-            ImGui::Begin("Another Window",
-                    &show_another_window); // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
+            // Pass a pointer to our bool variable
+            // (the window will have a closing button that will clear the bool when clicked)
+            ImGui::Begin("Another Window", &show_another_window);
             ImGui::Text("Hello from another window!");
             if (ImGui::Button("Close Me"))
                 show_another_window = false;
