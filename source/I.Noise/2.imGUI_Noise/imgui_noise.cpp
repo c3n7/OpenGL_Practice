@@ -31,6 +31,7 @@ void processInput(GLFWwindow* window) {
 int mapWidth = 1024;
 GLubyte* texData = new GLubyte[mapWidth * mapWidth * 3];
 FastNoise myNoise; // Create a FastNoise object
+FastNoise lookupNoise;
 
 void generateNoiseTexture(float frequency, FastNoise::NoiseType noiseType) {
     myNoise.SetNoiseType(noiseType); // Set the desired noise type
@@ -112,6 +113,27 @@ void updateNoise(float f, FastNoise::NoiseType current_noise_type) {
             GL_RGB,
             GL_UNSIGNED_BYTE,
             texData);
+}
+
+void showGeneralNoiseSettings(float* c_f, int* c_noise_type, int* c_seed) {
+    ImGui::SliderFloat("Frequency",
+            c_f,
+            0.02f,
+            1.0f); // Edit 1 float using a slider from 0.0f to 1.0f
+
+    ImGui::Combo("Noise Type",
+            c_noise_type,
+            "Value\0Value Fractal"
+            "\0Perlin\0Perlin Fractal"
+            "\0Simplex\0Simplex Fractal"
+            "\0Cellular\0White Noise"
+            "\0Cubic\0Cubic Fractal\0\0");
+
+    ImGui::InputInt("Seed", c_seed);
+
+    // Buttons return true when clicked (most widgets return true when edited/activated)
+    if (ImGui::Button("Random Seed"))
+        *c_seed = rand();
 }
 
 // clang-format off
@@ -250,7 +272,7 @@ int main() {
 
     // Our state
     bool show_demo_window = false;
-    bool show_another_window = false;
+    bool show_nl_window = false;
     ImVec4 clear_color = ImVec4(0.102f, 0.110f, 0.118f, 1.0f);
 
     const char* noises[] = {"Value",
@@ -264,6 +286,7 @@ int main() {
             "Cubic",
             "Cubic Fractal"};
 
+    static float f = 0.02f;
     float last_f = 0.0f;
 
     static int previous_noise_type = 2, current_noise_type = 2;
@@ -274,11 +297,16 @@ int main() {
     static int previous_return_type = 0, current_return_type = 0;
     static float previous_jitter = 0.45f, current_jitter = 0.45f;
 
+    // Noise Lookup
+    static float nl_f = 0.02f;
+    float nl_last_f = 0.0f;
+
+    static int nl_previous_noise_type = 2, nl_current_noise_type = 2;
+    static int nl_previous_seed = 0, nl_current_seed = 0;
+
     while (!glfwWindowShouldClose(window)) {
         // Input
         processInput(window);
-
-        static float f = 0.02f;
 
         if (f != last_f || previous_noise_type != current_noise_type ||
                 current_seed != previous_seed) {
@@ -313,14 +341,30 @@ int main() {
 
             if ((FastNoise::CellularReturnType)current_return_type ==
                     FastNoise::NoiseLookup) {
-                FastNoise newNoise;
-                newNoise.SetNoiseType(FastNoise::Perlin);
-                newNoise.SetFrequency(0.3f);
-                myNoise.SetCellularNoiseLookup(&newNoise);
+                lookupNoise.SetNoiseType(FastNoise::Perlin);
+                lookupNoise.SetFrequency(nl_f);
+                myNoise.SetCellularNoiseLookup(&lookupNoise);
             }
             updateNoise(f, (FastNoise::NoiseType)current_noise_type);
         }
 
+        if ((FastNoise::CellularReturnType)current_return_type ==
+                FastNoise::NoiseLookup) {
+            if (nl_f != nl_last_f ||
+                    nl_previous_noise_type != nl_current_noise_type ||
+                    nl_current_seed != nl_previous_seed) {
+                lookupNoise.SetFrequency(nl_f);
+                lookupNoise.SetNoiseType(
+                        (FastNoise::NoiseType)nl_current_noise_type);
+                lookupNoise.SetSeed(nl_current_seed);
+
+                updateNoise(f, (FastNoise::NoiseType)current_noise_type);
+
+                nl_last_f = nl_f;
+                nl_previous_noise_type = nl_current_noise_type;
+                nl_previous_seed = nl_current_seed;
+            }
+        }
         // Start the Dear ImGui frame
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
@@ -343,26 +387,8 @@ int main() {
 
             // Edit bools storing our window open/close state
             // ImGui::Checkbox("Demo Window", &show_demo_window);
-            // ImGui::Checkbox("Another Window", &show_another_window);
 
-            ImGui::SliderFloat("Frequency",
-                    &f,
-                    0.02f,
-                    1.0f); // Edit 1 float using a slider from 0.0f to 1.0f
-
-            ImGui::Combo("Noise Type",
-                    &current_noise_type,
-                    "Value\0Value Fractal"
-                    "\0Perlin\0Perlin Fractal"
-                    "\0Simplex\0Simplex Fractal"
-                    "\0Cellular\0White Noise"
-                    "\0Cubic\0Cubic Fractal\0\0");
-
-            ImGui::InputInt("Seed", &current_seed);
-
-            // Buttons return true when clicked (most widgets return true when edited/activated)
-            if (ImGui::Button("Random Seed"))
-                current_seed = rand();
+            showGeneralNoiseSettings(&f, &current_noise_type, &current_seed);
 
             if ((FastNoise::NoiseType)current_noise_type ==
                     FastNoise::Cellular) {
@@ -383,6 +409,11 @@ int main() {
                         "Distance2 Sub\0"
                         "Distance2 Mul\0"
                         "Distance2 Div\0\0");
+                if ((FastNoise::CellularReturnType)current_return_type ==
+                        FastNoise::NoiseLookup) {
+                    ImGui::Checkbox(
+                            "Lookup-noise settings window", &show_nl_window);
+                }
                 ImGui::SliderFloat("Jitter",
                         &current_jitter,
                         0.0f,
@@ -395,15 +426,19 @@ int main() {
             ImGui::End();
         }
 
-        // 3. Show another simple window.
-        if (show_another_window) {
+        // 3. Show noise lookup settings window
+        if ((FastNoise::NoiseType)current_noise_type == FastNoise::Cellular &&
+                (FastNoise::CellularReturnType)current_return_type ==
+                        FastNoise::NoiseLookup &&
+                show_nl_window) {
             // Pass a pointer to our bool variable
             // (the window will have a closing button that will clear the bool when clicked)
-            ImGui::Begin("Another Window", &show_another_window);
-            ImGui::Text("Hello from another window!");
-            if (ImGui::Button("Close Me"))
-                show_another_window = false;
+            ImGui::Begin("Noise Lookup", &show_nl_window);
+            showGeneralNoiseSettings(
+                    &nl_f, &nl_current_noise_type, &nl_current_seed);
             ImGui::End();
+        } else {
+            show_nl_window = false;
         }
 
         // Draw
