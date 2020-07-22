@@ -100,6 +100,20 @@ void generateNoiseTexture(float frequency, FastNoise::NoiseType noiseType) {
     delete[] heightMap;
 }
 
+void updateNoise(float f, FastNoise::NoiseType current_noise_type) {
+    generateNoiseTexture(f, (FastNoise::NoiseType)current_noise_type);
+    // Pass the noise
+    glTexImage2D(GL_TEXTURE_2D,
+            0,
+            GL_RGB,
+            mapWidth,
+            mapWidth,
+            0,
+            GL_RGB,
+            GL_UNSIGNED_BYTE,
+            texData);
+}
+
 // clang-format off
 float vertices[] = {
     // positions               // colors            // texture coords
@@ -120,7 +134,7 @@ int main() {
     // glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
     GLFWwindow* window =
-            glfwCreateWindow(800, 800, "Hello Triangle", NULL, NULL);
+            glfwCreateWindow(1000, 1000, "Hello Triangle", NULL, NULL);
     if (window == NULL) {
         std::cerr << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
@@ -132,7 +146,7 @@ int main() {
         std::cerr << "Failed to initialize GLAD" << std::endl;
         return -1;
     }
-    glViewport(0, 0, 800, 800);
+    glViewport(0, 0, 1000, 1000);
 
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
@@ -255,6 +269,11 @@ int main() {
     static int previous_noise_type = 2, current_noise_type = 2;
     static int previous_seed = 0, current_seed = 0;
 
+    // For cellular noise
+    static int previous_distance_function = 0, current_distance_function = 0;
+    static int previous_return_type = 0, current_return_type = 0;
+    static float previous_jitter = 0.45f, current_jitter = 0.45f;
+
     while (!glfwWindowShouldClose(window)) {
         // Input
         processInput(window);
@@ -265,8 +284,6 @@ int main() {
                 current_seed != previous_seed) {
             myNoise.SetSeed(current_seed);
 
-            generateNoiseTexture(f, (FastNoise::NoiseType)current_noise_type);
-
             std::cout << "Last Noise: " << previous_noise_type << " "
                       << noises[previous_noise_type]
                       << "\tCurrent Noise: " << current_noise_type << " "
@@ -276,16 +293,32 @@ int main() {
             previous_noise_type = current_noise_type;
             previous_seed = current_seed;
 
-            // Pass the noise
-            glTexImage2D(GL_TEXTURE_2D,
-                    0,
-                    GL_RGB,
-                    mapWidth,
-                    mapWidth,
-                    0,
-                    GL_RGB,
-                    GL_UNSIGNED_BYTE,
-                    texData);
+            updateNoise(f, (FastNoise::NoiseType)current_noise_type);
+        }
+
+        // For cellular noise
+        if (previous_distance_function != current_distance_function ||
+                previous_return_type != current_return_type ||
+                previous_jitter != current_jitter) {
+            myNoise.SetCellularDistanceFunction(
+                    (FastNoise::CellularDistanceFunction)
+                            current_distance_function);
+            myNoise.SetCellularReturnType(
+                    (FastNoise::CellularReturnType)current_return_type);
+            myNoise.SetCellularJitter(current_jitter);
+
+            previous_distance_function = current_distance_function;
+            previous_return_type = current_return_type;
+            previous_jitter = current_jitter;
+
+            if ((FastNoise::CellularReturnType)current_return_type ==
+                    FastNoise::NoiseLookup) {
+                FastNoise newNoise;
+                newNoise.SetNoiseType(FastNoise::Perlin);
+                newNoise.SetFrequency(0.3f);
+                myNoise.SetCellularNoiseLookup(&newNoise);
+            }
+            updateNoise(f, (FastNoise::NoiseType)current_noise_type);
         }
 
         // Start the Dear ImGui frame
@@ -330,6 +363,31 @@ int main() {
             // Buttons return true when clicked (most widgets return true when edited/activated)
             if (ImGui::Button("Random Seed"))
                 current_seed = rand();
+
+            if ((FastNoise::NoiseType)current_noise_type ==
+                    FastNoise::Cellular) {
+                ImGui::Text("Cellular");
+                ImGui::Combo("Distance Function",
+                        &current_distance_function,
+                        "Euclidean\0"
+                        "Manhattan\0"
+                        "Natural\0\0");
+
+                ImGui::Combo("Return Type",
+                        &current_return_type,
+                        "Cell Value\0"
+                        "Noise Lookup\0"
+                        "Distance\0"
+                        "Distance2\0"
+                        "Distance2 Add\0"
+                        "Distance2 Sub\0"
+                        "Distance2 Mul\0"
+                        "Distance2 Div\0\0");
+                ImGui::SliderFloat("Jitter",
+                        &current_jitter,
+                        0.0f,
+                        1.0f); // Edit 1 float using a slider from 0.0f to 1.0f
+            }
 
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)",
                     1000.0f / ImGui::GetIO().Framerate,
