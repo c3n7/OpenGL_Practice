@@ -30,13 +30,12 @@ void processInput(GLFWwindow* window) {
 
 int mapWidth = 1024;
 GLubyte* texData = new GLubyte[mapWidth * mapWidth * 3];
+FastNoise myNoise; // Create a FastNoise object
 
 void generateNoiseTexture(float frequency, FastNoise::NoiseType noiseType) {
-    FastNoise myNoise;               // Create a FastNoise object
     myNoise.SetNoiseType(noiseType); // Set the desired noise type
     myNoise.SetFrequency(frequency);
     // myNoise.SetCellularDistanceFunction(FastNoise::Natural);
-    myNoise.SetSeed(3455);
 
     float* heightMap =
             new float[mapWidth * mapWidth]; // 2D heightmap to create terrain
@@ -236,7 +235,7 @@ int main() {
             resources.getResourcePath("/fonts/DroidSans.ttf").c_str(), 16.0f);
 
     // Our state
-    bool show_demo_window = true;
+    bool show_demo_window = false;
     bool show_another_window = false;
     ImVec4 clear_color = ImVec4(0.102f, 0.110f, 0.118f, 1.0f);
 
@@ -252,8 +251,9 @@ int main() {
             "Cubic Fractal"};
 
     float last_f = 0.0f;
-    static int previous_noise_type = 2;
-    static int current_noise_type = 2;
+
+    static int previous_noise_type = 2, current_noise_type = 2;
+    static int previous_seed = 0, current_seed = 0;
 
     while (!glfwWindowShouldClose(window)) {
         // Input
@@ -261,7 +261,10 @@ int main() {
 
         static float f = 0.02f;
 
-        if (f != last_f || previous_noise_type != current_noise_type) {
+        if (f != last_f || previous_noise_type != current_noise_type ||
+                current_seed != previous_seed) {
+            myNoise.SetSeed(current_seed);
+
             generateNoiseTexture(f, (FastNoise::NoiseType)current_noise_type);
 
             std::cout << "Last Noise: " << previous_noise_type << " "
@@ -271,6 +274,7 @@ int main() {
 
             last_f = f;
             previous_noise_type = current_noise_type;
+            previous_seed = current_seed;
 
             // Pass the noise
             glTexImage2D(GL_TEXTURE_2D,
@@ -292,47 +296,40 @@ int main() {
         // 1. Show the big demo window
         // (Most of the sample code is in ImGui::ShowDemoWindow()!
         // You can browse its code to learn more about Dear ImGui!).
-        if (show_demo_window)
+        // if (show_demo_window)
         // ImGui::ShowDemoWindow(&show_demo_window);
 
         // 2. Show a simple window that we create ourselves.
         // We use a Begin/End pair to created a named window.
         {
-            static int counter = 0;
-
             // Create a window called "Hello, world!" and append into it.
-            ImGui::Begin("Hello, noise!");
+            ImGui::Begin("Noise Settings");
 
             // Display some text (you can use a format strings too)
-            ImGui::Text("Noise Settings.");
+            ImGui::Text("General");
 
             // Edit bools storing our window open/close state
             // ImGui::Checkbox("Demo Window", &show_demo_window);
             // ImGui::Checkbox("Another Window", &show_another_window);
 
-            ImGui::SliderFloat("frequency",
+            ImGui::SliderFloat("Frequency",
                     &f,
                     0.02f,
                     1.0f); // Edit 1 float using a slider from 0.0f to 1.0f
-            ImGui::ColorEdit3("clear color",
-                    (float*)&clear_color); // Edit 3 floats representing a color
 
-            if (ImGui::Combo("Noise Type",
-                        &current_noise_type,
-                        "Value\0Value Fractal"
-                        "\0Perlin\0Perlin Fractal"
-                        "\0Simplex\0Simplex Fractal"
-                        "\0Cellular\0White Noise"
-                        "\0Cubic\0Cubic Fractal\0\0")) {
-                std::cout << "Changing Noise Type" << std::endl;
-                // current_rand = (float)rand() / (float)RAND_MAX;
-            }
+            ImGui::Combo("Noise Type",
+                    &current_noise_type,
+                    "Value\0Value Fractal"
+                    "\0Perlin\0Perlin Fractal"
+                    "\0Simplex\0Simplex Fractal"
+                    "\0Cellular\0White Noise"
+                    "\0Cubic\0Cubic Fractal\0\0");
+
+            ImGui::InputInt("Seed", &current_seed);
 
             // Buttons return true when clicked (most widgets return true when edited/activated)
-            if (ImGui::Button("Button"))
-                counter++;
-            ImGui::SameLine();
-            ImGui::Text("counter = %d", counter);
+            if (ImGui::Button("Random Seed"))
+                current_seed = rand();
 
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)",
                     1000.0f / ImGui::GetIO().Framerate,
