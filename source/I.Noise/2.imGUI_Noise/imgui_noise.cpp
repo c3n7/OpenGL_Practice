@@ -240,23 +240,20 @@ int main() {
     bool show_another_window = false;
     ImVec4 clear_color = ImVec4(0.102f, 0.110f, 0.118f, 1.0f);
 
-    float last_f = 0.0f;
-    int last_noise_type = 2;
-    // const char* noises[] = {"Noise Type",
-    // "Value",
-    // "Value Fractal",
-    // "Perlin",
-    // "Perlin Fractal",
-    // "Simplex",
-    // "Simplex Fractal",
-    // "Cellular",
-    // "White Noise",
-    // "Cubic",
-    // "Cubic Fractal"};
+    const char* noises[] = {"Value",
+            "Value Fractal",
+            "Perlin",
+            "Perlin Fractal",
+            "Simplex",
+            "Simplex Fractal",
+            "Cellular",
+            "White Noise",
+            "Cubic",
+            "Cubic Fractal"};
 
-    static int noise_type = 2;
-    float current_rand = 0.02f;
-    float previous_rand = 0.02f;
+    float last_f = 0.0f;
+    static int previous_noise_type = 2;
+    static int current_noise_type = 2;
 
     while (!glfwWindowShouldClose(window)) {
         // Input
@@ -264,10 +261,16 @@ int main() {
 
         static float f = 0.02f;
 
-        if (f != last_f || current_rand != previous_rand) {
-            generateNoiseTexture(f, (FastNoise::NoiseType)noise_type);
+        if (f != last_f || previous_noise_type != current_noise_type) {
+            generateNoiseTexture(f, (FastNoise::NoiseType)current_noise_type);
+
+            std::cout << "Last Noise: " << previous_noise_type << " "
+                      << noises[previous_noise_type]
+                      << "\tCurrent Noise: " << current_noise_type << " "
+                      << noises[current_noise_type] << std::endl;
+
             last_f = f;
-            previous_rand = current_rand;
+            previous_noise_type = current_noise_type;
 
             // Pass the noise
             glTexImage2D(GL_TEXTURE_2D,
@@ -290,7 +293,7 @@ int main() {
         // (Most of the sample code is in ImGui::ShowDemoWindow()!
         // You can browse its code to learn more about Dear ImGui!).
         if (show_demo_window)
-            // ImGui::ShowDemoWindow(&show_demo_window);
+        // ImGui::ShowDemoWindow(&show_demo_window);
 
         // 2. Show a simple window that we create ourselves.
         // We use a Begin/End pair to created a named window.
@@ -315,15 +318,14 @@ int main() {
                     (float*)&clear_color); // Edit 3 floats representing a color
 
             if (ImGui::Combo("Noise Type",
-                        &noise_type,
+                        &current_noise_type,
                         "Value\0Value Fractal"
                         "\0Perlin\0Perlin Fractal"
                         "\0Simplex\0Simplex Fractal"
                         "\0Cellular\0White Noise"
                         "\0Cubic\0Cubic Fractal\0\0")) {
-                std::cout << "Last Noise: " << last_noise_type
-                          << "\tCurrent Noise: " << noise_type << std::endl;
-                current_rand = (float) rand() / (float) RAND_MAX;
+                std::cout << "Changing Noise Type" << std::endl;
+                // current_rand = (float)rand() / (float)RAND_MAX;
             }
 
             // Buttons return true when clicked (most widgets return true when edited/activated)
